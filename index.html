@@ -1,0 +1,2293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Area 75 — Alcoholics Anonymous in Southern Wisconsin</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+  <style>
+    /* ── TOKENS ─────────────────────────────────────────── */
+    :root {
+      /* Midnight Blue zone (navbar, footer, hero, cards) */
+      --blue:        #191970;
+      --blue-mid:    #1a1a80;
+      --blue-light:  #20208f;
+      --blue-border: #2e2ea0;
+      --on-blue:     #FFFACD;   /* pale yellow text on blue */
+      --on-blue-dim: #c8bc5a;   /* muted yellow on blue */
+
+      /* Pale Yellow zone (main content area) */
+      --yellow:      #FFFACD;
+      --on-yellow:   #1a1a40;   /* dark navy text on yellow */
+      --on-yellow-dim: #4a4a7a; /* muted navy on yellow */
+      --yellow-border: #c0ba78; /* subtle border on yellow bg */
+
+      /* Accent (crimson red — works on both zones) */
+      --accent:      #C0392B;   /* rich crimson — visible on midnight blue */
+      --accent-dark: #8B0000;   /* dark red — readable on pale yellow */
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--yellow);
+      color: var(--on-yellow);
+      font-family: 'Georgia', 'Times New Roman', serif;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+    a { color: var(--accent-dark); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    #root { display: flex; flex-direction: column; min-height: 100vh; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--blue-mid); }
+    ::-webkit-scrollbar-thumb { background: var(--blue-border); border-radius: 3px; }
+
+    /* ── NAVBAR (midnight blue) ─────────────────────────── */
+    .navbar {
+      background: var(--blue);
+      border-bottom: 2px solid var(--blue-border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.5);
+    }
+    .navbar-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+    .navbar-brand {
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+      user-select: none;
+    }
+    .navbar-brand .brand-title {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: var(--accent);
+      letter-spacing: 0.04em;
+      line-height: 1.2;
+    }
+    .navbar-brand .brand-sub {
+      font-size: 0.7rem;
+      color: var(--on-blue-dim);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      list-style: none;
+    }
+    .nav-item { position: relative; }
+    .nav-btn {
+      background: none;
+      border: none;
+      color: var(--on-blue);
+      font-family: inherit;
+      font-size: 0.85rem;
+      padding: 0.45rem 0.75rem;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: background 0.15s, color 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      white-space: nowrap;
+    }
+    .nav-btn:hover, .nav-btn.active {
+      background: var(--blue-light);
+      color: var(--accent);
+    }
+    .nav-btn .chevron { font-size: 0.6rem; opacity: 0.6; transition: transform 0.2s; }
+    .nav-btn.open .chevron { transform: rotate(180deg); }
+    .nav-ext { font-size: 0.65rem; opacity: 0.6; }
+
+    /* Dropdown (midnight blue) */
+    .dropdown {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      background: var(--blue-light);
+      border: 1px solid var(--blue-border);
+      border-radius: 8px;
+      min-width: 220px;
+      padding: 0.4rem 0;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+      animation: fadeDown 0.15s ease;
+      z-index: 200;
+    }
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .dropdown-section-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--on-blue-dim);
+      padding: 0.6rem 1rem 0.2rem;
+    }
+    .dropdown-item {
+      display: block;
+      width: 100%;
+      background: none;
+      border: none;
+      text-align: left;
+      color: var(--on-blue);
+      font-family: inherit;
+      font-size: 0.83rem;
+      padding: 0.45rem 1rem;
+      cursor: pointer;
+      transition: background 0.1s, color 0.1s;
+    }
+    .dropdown-item:hover { background: var(--blue-mid); color: var(--accent); }
+    .dropdown-divider { border: none; border-top: 1px solid var(--blue-border); margin: 0.3rem 0; }
+
+    /* Mobile hamburger */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 6px;
+    }
+    .hamburger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--on-blue);
+      border-radius: 2px;
+      transition: all 0.2s;
+    }
+
+    /* Mobile nav (midnight blue) */
+    .mobile-nav {
+      background: var(--blue-mid);
+      border-top: 1px solid var(--blue-border);
+      padding: 1rem 1.5rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+    .mobile-section-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--on-blue-dim);
+      padding: 0.8rem 0 0.3rem;
+    }
+    .mobile-nav-item {
+      background: none;
+      border: none;
+      text-align: left;
+      color: var(--on-blue);
+      font-family: inherit;
+      font-size: 0.9rem;
+      padding: 0.5rem 0.5rem;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: background 0.1s, color 0.1s;
+    }
+    .mobile-nav-item:hover { background: var(--blue-light); color: var(--accent); }
+
+    /* ── HERO (midnight blue, same zone as navbar) ──────── */
+    .hero {
+      background: linear-gradient(160deg, #191970 0%, #1e1e90 50%, #191970 100%);
+      border-bottom: 3px solid var(--accent);
+      padding: 4rem 1.5rem 3.5rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(255,250,205,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      color: var(--on-blue);
+      letter-spacing: 0.02em;
+      margin-bottom: 0.5rem;
+    }
+    .hero h1 span { color: var(--accent); }
+    .hero p {
+      font-size: 1rem;
+      color: var(--on-blue-dim);
+      max-width: 560px;
+      margin: 0 auto 1.5rem;
+    }
+    .hero-btn {
+      display: inline-block;
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.9rem;
+      padding: 0.65rem 1.6rem;
+      border-radius: 30px;
+      font-family: inherit;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      font-weight: bold;
+      letter-spacing: 0.03em;
+    }
+    .hero-btn:hover { background: #8B0000; transform: translateY(-1px); }
+
+    /* ── EVENTS STRIP (pale yellow, same as main) ───────── */
+    .events-strip {
+      background: var(--yellow);
+      border-bottom: 1px solid var(--yellow-border);
+      padding: 2rem 1.5rem;
+    }
+    .events-strip-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+    }
+
+    /* ── CARDS (midnight blue on pale yellow background) ── */
+    .event-card {
+      background: var(--blue);
+      border: 1px solid var(--blue-border);
+      border-left: 4px solid var(--accent);
+      border-radius: 8px;
+      padding: 1rem 1.2rem;
+    }
+    .event-date {
+      font-size: 0.72rem;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-family: 'Arial', sans-serif;
+      margin-bottom: 0.3rem;
+      font-weight: bold;
+    }
+    .event-title {
+      font-size: 1rem;
+      font-weight: bold;
+      color: var(--on-blue);
+      margin-bottom: 0.25rem;
+    }
+    .event-loc {
+      font-size: 0.8rem;
+      color: var(--on-blue-dim);
+      line-height: 1.5;
+    }
+
+    /* ── MAIN CONTENT (pale yellow) ─────────────────────── */
+    .main { flex: 1; background: var(--yellow); }
+    .content-wrapper {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 4rem;
+    }
+
+    /* Page header */
+    .page-header {
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--yellow-border);
+    }
+    .page-header h1 {
+      font-size: clamp(1.5rem, 3vw, 2.2rem);
+      color: var(--on-yellow);
+    }
+    .page-header h1 span { color: var(--accent-dark); }
+    .page-subtitle {
+      color: var(--on-yellow-dim);
+      font-size: 0.9rem;
+      margin-top: 0.3rem;
+    }
+
+    /* Prose (on pale yellow background → dark text) */
+    .prose { font-size: 0.97rem; color: var(--on-yellow); }
+    .prose h2 {
+      font-size: 1.25rem;
+      color: var(--blue);
+      margin: 2rem 0 0.7rem;
+      padding-bottom: 0.3rem;
+      border-bottom: 1px solid var(--yellow-border);
+    }
+    .prose h3 {
+      font-size: 1.05rem;
+      color: var(--on-yellow);
+      margin: 1.4rem 0 0.4rem;
+    }
+    .prose p { margin-bottom: 1rem; color: var(--on-yellow); }
+    .prose ul, .prose ol { padding-left: 1.5rem; margin-bottom: 1rem; }
+    .prose li { margin-bottom: 0.4rem; color: var(--on-yellow); }
+    .prose strong { color: var(--on-yellow); }
+    .prose .cite {
+      font-size: 0.8rem;
+      color: var(--on-yellow-dim);
+      font-style: italic;
+      margin-top: 1rem;
+      display: block;
+    }
+    .prose a { color: var(--accent-dark); font-weight: bold; }
+    .prose a:hover { text-decoration: underline; }
+
+    /* Numbered list (midnight blue cards on yellow page) */
+    .numbered-list {
+      list-style: none;
+      padding: 0;
+      counter-reset: item;
+    }
+    .numbered-list li {
+      counter-increment: item;
+      display: flex;
+      gap: 1rem;
+      padding: 0.8rem 1rem;
+      margin-bottom: 0.5rem;
+      background: var(--blue);
+      color: var(--on-blue);
+      border: 1px solid var(--blue-border);
+      border-radius: 8px;
+      align-items: flex-start;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .numbered-list li:hover { border-color: var(--accent); box-shadow: 0 2px 12px rgba(25,25,112,0.3); }
+    .numbered-list li::before {
+      content: counter(item);
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.75rem;
+      font-family: 'Arial', sans-serif;
+      font-weight: bold;
+      min-width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    /* Info card (midnight blue on yellow page) */
+    .info-card {
+      background: var(--blue);
+      border: 1px solid var(--blue-border);
+      border-radius: 10px;
+      padding: 1.2rem 1.4rem;
+      margin-bottom: 1.2rem;
+      color: var(--on-blue);
+    }
+    .info-card h3 {
+      color: var(--accent);
+      font-size: 1rem;
+      margin-bottom: 0.4rem;
+    }
+    .info-card p, .info-card address {
+      font-size: 0.88rem;
+      color: var(--on-blue-dim);
+      font-style: normal;
+      line-height: 1.8;
+    }
+    .info-card a { color: var(--accent); font-weight: bold; }
+    .info-card strong { color: var(--on-blue); }
+
+    /* Alert banner (midnight blue on yellow page) */
+    .alert-banner {
+      background: var(--blue);
+      border: 2px solid var(--accent);
+      border-radius: 8px;
+      padding: 1rem 1.2rem;
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
+      color: var(--on-blue);
+    }
+    .alert-banner strong { color: var(--accent); }
+
+    /* Resource links (midnight blue on yellow page) */
+    .resource-link {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.65rem 1rem;
+      background: var(--blue);
+      border: 1px solid var(--blue-border);
+      border-radius: 6px;
+      margin-bottom: 0.5rem;
+      color: var(--on-blue);
+      font-size: 0.88rem;
+      transition: border-color 0.15s, background 0.15s;
+      text-decoration: none;
+    }
+    .resource-link:hover { border-color: var(--accent); background: var(--blue-light); color: var(--on-blue); text-decoration: none; }
+    .resource-link::before { content: '→'; color: var(--accent); font-size: 0.9rem; font-weight: bold; }
+
+    /* Quote block (midnight blue on yellow page) */
+    .blockquote {
+      border-left: 4px solid var(--accent);
+      padding: 0.8rem 1.2rem;
+      background: var(--blue);
+      color: var(--on-blue-dim);
+      border-radius: 0 8px 8px 0;
+      margin: 1.2rem 0;
+      font-style: italic;
+    }
+    .blockquote strong { color: var(--on-blue); }
+
+    /* Section divider (on yellow) */
+    .section-divider {
+      border: none;
+      border-top: 1px solid var(--yellow-border);
+      margin: 2rem 0;
+    }
+
+    /* Inline committee grid */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media (max-width: 600px) { .two-col { grid-template-columns: 1fr; } }
+
+    /* ── FOOTER (midnight blue) ─────────────────────────── */
+    footer {
+      background: var(--blue);
+      border-top: 2px solid var(--blue-border);
+      padding: 2rem 1.5rem;
+      text-align: center;
+      color: var(--on-blue-dim);
+      font-size: 0.8rem;
+    }
+    footer a { color: var(--accent); }
+    .footer-inner { max-width: 1100px; margin: 0 auto; }
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+    .footer-links button {
+      background: none;
+      border: none;
+      color: var(--on-blue-dim);
+      font-size: 0.8rem;
+      cursor: pointer;
+      font-family: inherit;
+      transition: color 0.15s;
+    }
+    .footer-links button:hover { color: var(--accent); }
+
+    /* ── MEETINGS PAGE ──────────────────────────────────── */
+    .meetings-intro {
+      background: var(--blue);
+      border-bottom: 3px solid var(--accent);
+      padding: 2.5rem 1.5rem;
+      text-align: center;
+    }
+    .meetings-intro h1 { color: var(--on-blue); font-size: clamp(1.6rem,3vw,2.4rem); margin-bottom: 0.4rem; }
+    .meetings-intro h1 span { color: var(--accent); }
+    .meetings-intro p { color: var(--on-blue-dim); max-width: 600px; margin: 0 auto; }
+    .meetings-meta {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 4rem;
+    }
+    .meeting-type-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .meeting-type-card {
+      background: var(--blue);
+      border: 1px solid var(--blue-border);
+      border-top: 3px solid var(--accent);
+      border-radius: 8px;
+      padding: 1.1rem 1.3rem;
+    }
+    .meeting-type-card h3 { color: var(--accent); font-size: 0.95rem; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    .meeting-type-card p { color: var(--on-blue-dim); font-size: 0.87rem; margin: 0; }
+
+    /* ── EVENTS PAGE ─────────────────────────────────────── */
+    .events-page-header {
+      background: var(--blue);
+      border-bottom: 3px solid var(--accent);
+      padding: 2.5rem 1.5rem;
+      text-align: center;
+    }
+    .events-page-header h1 { color: var(--on-blue); font-size: clamp(1.6rem,3vw,2.4rem); margin-bottom: 0.4rem; }
+    .events-page-header h1 span { color: var(--accent); }
+    .events-page-header p { color: var(--on-blue-dim); max-width: 560px; margin: 0 auto; }
+    .events-content { max-width: 960px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+    .events-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px,1fr));
+      gap: 1.25rem;
+      margin-bottom: 2.5rem;
+    }
+    .event-full-card {
+      background: var(--blue);
+      border: 1px solid var(--blue-border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .event-full-card-top {
+      background: var(--accent);
+      padding: 0.7rem 1.2rem;
+    }
+    .event-full-card-top .date-label { color: #fff; font-size: 0.8rem; font-weight: bold; letter-spacing: 0.06em; text-transform: uppercase; font-family: Arial, sans-serif; }
+    .event-full-card-body { padding: 1.1rem 1.2rem; }
+    .event-full-card-body h3 { color: var(--on-blue); font-size: 1.05rem; margin-bottom: 0.5rem; }
+    .event-full-card-body .location { color: var(--on-blue-dim); font-size: 0.85rem; line-height: 1.6; }
+    .event-full-card-body .location strong { color: var(--on-blue); display: block; margin-bottom: 0.1rem; }
+
+    /* Mini calendar */
+    .calendars-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+      gap: 1.25rem;
+      margin-bottom: 2.5rem;
+    }
+    .mini-cal {
+      background: var(--blue);
+      border: 1px solid var(--blue-border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .mini-cal-header {
+      background: var(--blue-light);
+      padding: 0.6rem 1rem;
+      text-align: center;
+      color: var(--on-blue);
+      font-size: 0.9rem;
+      font-weight: bold;
+      letter-spacing: 0.04em;
+      border-bottom: 1px solid var(--blue-border);
+    }
+    .mini-cal-dow {
+      display: grid;
+      grid-template-columns: repeat(7,1fr);
+      padding: 0.4rem 0.5rem 0.2rem;
+    }
+    .mini-cal-dow span {
+      text-align: center;
+      font-size: 0.65rem;
+      color: var(--on-blue-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .mini-cal-days {
+      display: grid;
+      grid-template-columns: repeat(7,1fr);
+      padding: 0 0.5rem 0.7rem;
+      gap: 2px;
+    }
+    .cal-day {
+      text-align: center;
+      font-size: 0.78rem;
+      padding: 0.25rem 0;
+      border-radius: 50%;
+      color: var(--on-blue-dim);
+      line-height: 1.6;
+    }
+    .cal-day.today { background: var(--blue-light); color: var(--on-blue); font-weight: bold; }
+    .cal-day.has-event {
+      background: var(--accent);
+      color: #fff;
+      font-weight: bold;
+      border-radius: 50%;
+      width: 26px;
+      height: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto;
+    }
+    .cal-day.event-range {
+      background: rgba(192,57,43,0.25);
+      color: var(--on-blue);
+      border-radius: 0;
+    }
+    .cal-day.event-range-start { border-radius: 50% 0 0 50%; }
+    .cal-day.event-range-end { border-radius: 0 50% 50% 0; }
+    .cal-day.faded { color: rgba(255,250,205,0.2); }
+
+    /* ── THEME SELECTOR ─────────────────────────────────── */
+    .theme-selector {
+      background: var(--blue);
+      border: 1px solid var(--blue-border);
+      border-radius: 12px;
+      padding: 1.2rem 1.4rem;
+      margin-bottom: 2rem;
+    }
+    .theme-selector-title {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--on-blue-dim);
+      margin-bottom: 1rem;
+      font-family: Arial, sans-serif;
+    }
+    .theme-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.45rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .theme-row:last-child { border-bottom: none; }
+    .theme-swatches {
+      display: flex;
+      gap: 3px;
+      flex-shrink: 0;
+    }
+    .theme-swatch {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.25);
+      display: inline-block;
+      flex-shrink: 0;
+    }
+    .theme-label {
+      flex: 1;
+      font-size: 0.82rem;
+      color: var(--on-blue);
+      font-family: Arial, sans-serif;
+    }
+    .theme-label small {
+      display: block;
+      font-size: 0.68rem;
+      color: var(--on-blue-dim);
+      margin-top: 1px;
+    }
+    .theme-mode-btns {
+      display: flex;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+    .theme-mode-btn {
+      background: transparent;
+      border: 1px solid var(--blue-border);
+      color: var(--on-blue-dim);
+      font-size: 0.72rem;
+      font-family: Arial, sans-serif;
+      padding: 0.22rem 0.6rem;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .theme-mode-btn:hover { border-color: var(--accent); color: var(--on-blue); }
+    .theme-mode-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+      font-weight: bold;
+    }
+
+    /* ── RESPONSIVE ─────────────────────────────────────── */
+    @media (max-width: 768px) {
+      .nav-links { display: none !important; }
+      .hamburger { display: flex; }
+    }
+    @media (min-width: 769px) {
+      .mobile-nav { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect, useRef } = React;
+
+// ── DATA ────────────────────────────────────────────────────────────────────
+
+// ── THEMES ──────────────────────────────────────────────────────────────────
+// Each entry maps CSS variable names to values.
+// "original" = empty → removes all overrides, restoring the stylesheet defaults.
+const THEMES = {
+  "original": {
+    name: "Area 75 Default", swatches: ["#191970","#FFFACD"],
+    vars: {}
+  },
+  "modern-light": {
+    name: "Modern & Comfortable", mode: "Light", swatches: ["#F4F4F9","#333333"],
+    vars: {
+      "--blue":"#3A3A50","--blue-mid":"#444460","--blue-light":"#505070",
+      "--blue-border":"#6868A0","--on-blue":"#F4F4F9","--on-blue-dim":"#B0B0CC",
+      "--yellow":"#F4F4F9","--on-yellow":"#333333","--on-yellow-dim":"#666677",
+      "--yellow-border":"#C4C4D8","--accent":"#C0392B","--accent-dark":"#8B0000",
+    }
+  },
+  "modern-dark": {
+    name: "Modern & Comfortable", mode: "Dark", swatches: ["#2C2C2C","#E4E4E4"],
+    vars: {
+      "--blue":"#1E1E1E","--blue-mid":"#242424","--blue-light":"#2C2C2C",
+      "--blue-border":"#484848","--on-blue":"#E4E4E4","--on-blue-dim":"#AAAAAA",
+      "--yellow":"#2C2C2C","--on-yellow":"#E4E4E4","--on-yellow-dim":"#AAAAAA",
+      "--yellow-border":"#484848","--accent":"#E05040","--accent-dark":"#C0392B",
+    }
+  },
+  "warm-light": {
+    name: "Warm & Welcoming", mode: "Light", swatches: ["#F5E8D8","#3E2723"],
+    vars: {
+      "--blue":"#3E2723","--blue-mid":"#4E3028","--blue-light":"#5C3A30",
+      "--blue-border":"#8A5040","--on-blue":"#F5E8D8","--on-blue-dim":"#D4A888",
+      "--yellow":"#F5E8D8","--on-yellow":"#3E2723","--on-yellow-dim":"#795548",
+      "--yellow-border":"#C8A888","--accent":"#C0392B","--accent-dark":"#8B0000",
+    }
+  },
+  "warm-dark": {
+    name: "Warm & Welcoming", mode: "Dark", swatches: ["#1C1C1C","#F5E8D8"],
+    vars: {
+      "--blue":"#111111","--blue-mid":"#191919","--blue-light":"#222222",
+      "--blue-border":"#3A3A3A","--on-blue":"#F5E8D8","--on-blue-dim":"#C8A888",
+      "--yellow":"#1C1C1C","--on-yellow":"#F5E8D8","--on-yellow-dim":"#C8A888",
+      "--yellow-border":"#3A3A3A","--accent":"#E05040","--accent-dark":"#C0392B",
+    }
+  },
+  "professional-light": {
+    name: "Professional", mode: "Light", swatches: ["#F0F4F8","#102A43"],
+    vars: {
+      "--blue":"#102A43","--blue-mid":"#163452","--blue-light":"#1E4060",
+      "--blue-border":"#2A6090","--on-blue":"#F0F4F8","--on-blue-dim":"#9ABCDC",
+      "--yellow":"#F0F4F8","--on-yellow":"#102A43","--on-yellow-dim":"#3A6080",
+      "--yellow-border":"#BAD0E8","--accent":"#C0392B","--accent-dark":"#8B0000",
+    }
+  },
+  "professional-dark": {
+    name: "Professional", mode: "Dark", swatches: ["#00246B","#CADCFC"],
+    vars: {
+      "--blue":"#001040","--blue-mid":"#001855","--blue-light":"#00246B",
+      "--blue-border":"#1848B8","--on-blue":"#CADCFC","--on-blue-dim":"#7AA0DC",
+      "--yellow":"#00246B","--on-yellow":"#CADCFC","--on-yellow-dim":"#7AA0DC",
+      "--yellow-border":"#1848B8","--accent":"#E05040","--accent-dark":"#C0392B",
+    }
+  },
+  "creative-light": {
+    name: "Creative & Tech", mode: "Light", swatches: ["#FFFFFF","#000000"],
+    vars: {
+      "--blue":"#0A0A1E","--blue-mid":"#111128","--blue-light":"#1A1A35",
+      "--blue-border":"#3838A0","--on-blue":"#FFFFFF","--on-blue-dim":"#AAAACC",
+      "--yellow":"#FFFFFF","--on-yellow":"#000000","--on-yellow-dim":"#444444",
+      "--yellow-border":"#CCCCCC","--accent":"#007BFF","--accent-dark":"#0056CC",
+    }
+  },
+  "creative-dark": {
+    name: "Creative & Tech", mode: "Dark", swatches: ["#121212","#E0E0E0"],
+    vars: {
+      "--blue":"#080808","--blue-mid":"#0F0F0F","--blue-light":"#1A1A1A",
+      "--blue-border":"#303030","--on-blue":"#E0E0E0","--on-blue-dim":"#909090",
+      "--yellow":"#121212","--on-yellow":"#E0E0E0","--on-yellow-dim":"#909090",
+      "--yellow-border":"#303030","--accent":"#1E90FF","--accent-dark":"#007BFF",
+    }
+  },
+};
+
+const THEME_GROUPS = [
+  { key: "original",      modes: [null] },
+  { key: "modern",        modes: ["light","dark"] },
+  { key: "warm",          modes: ["light","dark"] },
+  { key: "professional",  modes: ["light","dark"] },
+  { key: "creative",      modes: ["light","dark"] },
+];
+
+const EVENTS = [
+  {
+    date: "Sun Jun 14 · 9:00 am",
+    title: "Summer Service Assembly",
+    location: "Madison Senior Center\n330 West Mifflin Street\nMadison, WI 53703"
+  },
+  {
+    date: "Sun Sep 13 · 9:00 am",
+    title: "Pre-Conference Service Assembly",
+    location: "Madison Senior Center\n330 West Mifflin Street\nMadison, WI 53703"
+  },
+  {
+    date: "Fri Nov 6 6:30 pm – Sun Nov 8 12:00 pm",
+    title: "Area 75 Conference",
+    location: "The Ingleside Hotel\nPewaukee, WI"
+  }
+];
+
+const NAV_ABOUT = [
+  { id: "whatisaa",      label: "What is AA?" },
+  { id: "preamble",      label: "The Preamble" },
+  { id: "12steps",       label: "The 12 Steps" },
+  { id: "12traditions",  label: "The 12 Traditions" },
+  { id: "aaresources",   label: "AA Resources" },
+  { id: "messagetoteens",label: "Message to Teens" },
+  { id: "structure",     label: "The Structure of AA" },
+];
+
+const NAV_BUSINESS = [
+  { id: "districtmeetings", label: "District Meetings" },
+  { id: "registrar",        label: "Registrar" },
+];
+
+const NAV_COMMITTEES = [
+  { id: "accessibilities",  label: "Accessibilities" },
+  { id: "archives",         label: "Archives" },
+  { id: "corrections",      label: "Corrections" },
+  { id: "cpc",              label: "CPC" },
+  { id: "finance",          label: "Finance" },
+  { id: "grapevine",        label: "Grapevine" },
+  { id: "literature",       label: "Literature" },
+  { id: "publicinformation",label: "Public Information" },
+  { id: "treatment",        label: "Treatment" },
+  { id: "technology",       label: "Technology" },
+];
+
+// ── PAGE COMPONENTS ─────────────────────────────────────────────────────────
+
+// ── THEME SELECTOR ───────────────────────────────────────────────────────────
+
+function ThemeSelector({ themeId, setThemeId }) {
+  const rows = [
+    { id: "original",     name: "Area 75 Default",        swatches: ["#191970","#FFFACD"],  modes: [null] },
+    { id: "modern",       name: "Modern & Comfortable",   swatches: ["#F4F4F9","#2C2C2C"],  modes: ["light","dark"] },
+    { id: "warm",         name: "Warm & Welcoming",       swatches: ["#F5E8D8","#1C1C1C"],  modes: ["light","dark"] },
+    { id: "professional", name: "Professional",           swatches: ["#F0F4F8","#00246B"],  modes: ["light","dark"] },
+    { id: "creative",     name: "Creative & Tech",        swatches: ["#FFFFFF","#121212"],  modes: ["light","dark"] },
+  ];
+
+  return (
+    <div className="theme-selector">
+      <div className="theme-selector-title">🎨 Color Scheme</div>
+      {rows.map(row => (
+        <div className="theme-row" key={row.id}>
+          <div className="theme-swatches">
+            {row.swatches.map((c, i) => (
+              <span key={i} className="theme-swatch" style={{background: c}} />
+            ))}
+          </div>
+          <div className="theme-label">
+            {row.name}
+          </div>
+          <div className="theme-mode-btns">
+            {row.modes.map(mode => {
+              const tid = mode ? `${row.id}-${mode}` : "original";
+              const label = mode ? (mode === "light" ? "Light" : "Dark") : "Default";
+              return (
+                <button
+                  key={tid}
+                  className={`theme-mode-btn${themeId === tid ? " active" : ""}`}
+                  onClick={() => setThemeId(tid)}
+                >
+                  {label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function HomePage({ navigate, themeId, setThemeId }) {
+  return (
+    <>
+      <div className="hero">
+        <h1>Area <span>75</span></h1>
+        <p>Alcoholics Anonymous in Southern Wisconsin — carrying the message of recovery since the beginning.</p>
+        <button className="hero-btn" onClick={() => navigate("meetings")}>
+          Find a Meeting
+        </button>
+      </div>
+
+      <div className="events-strip">
+        <div className="events-strip-inner">
+          {EVENTS.map((e, i) => (
+            <div className="event-card" key={i}>
+              <div className="event-date">{e.date}</div>
+              <div className="event-title">{e.title}</div>
+              <div className="event-loc">{e.location.split("\n").map((l,j) => <span key={j}>{l}<br/></span>)}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="content-wrapper">
+        <div className="alert-banner">
+          <strong>📍 New Contribution Address:</strong>&nbsp; Area 75 Treasurer &nbsp;·&nbsp;
+          <strong>6580 Monona Drive #1040, Monona, WI 53716</strong>
+        </div>
+
+        <div className="page-header">
+          <h1>The Purpose of this Web Site</h1>
+        </div>
+
+        <div className="prose">
+          <p>
+            The purpose of this Web Site is to help the still suffering alcoholic by carrying the message
+            of recovery through Alcoholics Anonymous (A.A.) to the general public and to provide
+            information regarding events, meetings, workshops, conferences and other matters of importance
+            to recovering alcoholics in southern Wisconsin.
+          </p>
+          <p>
+            It is our hope that through this Web Site alcoholics may be assisted in developing face-to-face
+            contact with one another. The guiding principles of the content included in this site are taken
+            from Alcoholics Anonymous as defined in the Preamble of Alcoholics Anonymous, the Twelve Steps
+            and Twelve Traditions, and other A.A. General Service Conference approved literature.
+          </p>
+
+          <hr className="section-divider"/>
+
+          <h2>Upcoming Events</h2>
+          <p>
+            <a href="https://area75.org/calendar/" target="_blank" rel="noreferrer">View the full events calendar ↗</a>
+            &nbsp;·&nbsp;
+            <a href="https://area75.org/page/post_your_event" target="_blank" rel="noreferrer">Get your event posted ↗</a>
+          </p>
+
+          <h2>Quick Links</h2>
+          <div style={{display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(220px,1fr))", gap:"0.5rem", marginTop:"0.5rem"}}>
+            <a className="resource-link" href="http://mtg.area75.org/meetings.html" target="_blank" rel="noreferrer">Find a Meeting</a>
+            <a className="resource-link" href="https://area75.org/calendar/" target="_blank" rel="noreferrer">Events Calendar</a>
+            <a className="resource-link" href="https://docs.google.com/document/d/e/2PACX-1vQuTaHxcXiLJ8_vSzEdvo9Ovck8dWVcuJwaq-ciKlsCcqkn5oSgHYkfeyzz7-ZhBA/pub" target="_blank" rel="noreferrer">Zoom Guidelines</a>
+            <a className="resource-link" href="https://www.aa.org/" target="_blank" rel="noreferrer">AA.org</a>
+          </div>
+
+          <hr className="section-divider"/>
+          <ThemeSelector themeId={themeId} setThemeId={setThemeId} />
+        </div>
+      </div>
+    </>
+  );
+}
+
+function WhatIsAAPage() {
+  return (
+    <div className="content-wrapper">
+      <div className="page-header">
+        <h1>What is <span style={{color:"var(--accent-dark)"}}>Alcoholics Anonymous?</span></h1>
+      </div>
+      <div className="prose">
+        <p>
+          Alcoholics Anonymous is a voluntary, worldwide fellowship of men and women from all walks of life
+          who meet together to attain and maintain sobriety. The only requirement for membership is a desire
+          to stop drinking. There are no dues or fees for A.A. membership.
+        </p>
+        <span className="cite">Reprinted from: A.A. at a Glance, P-1, with permission of A.A. World Services Inc.</span>
+
+        <h2>How Does A.A. Help the Alcoholic?</h2>
+        <p>
+          Through the example and friendship of the recovered alcoholics in A.A., new members are encouraged
+          to stay away from a drink "one day at a time," as everyone in A.A. does. Instead of "swearing off
+          forever" or worrying about whether they will be sober tomorrow, people in A.A. concentrate on not
+          drinking right now — today.
+        </p>
+        <p>
+          By keeping alcohol out of their systems, newcomers take care of one part of their illness. There is
+          another part. If they are going to stay sober, they need healthy minds and healthy emotions, too. So
+          they begin to straighten out their confused thinking and unhappy feelings by following A.A.'s
+          "Twelve Steps" to recovery.
+        </p>
+
+        <h2>What is an A.A. Meeting?</h2>
+        <p>There are generally two types of A.A. meetings — open meetings and closed meetings.</p>
+        <p>
+          At <strong>open meetings</strong>, speakers tell how they drank, how they came to A.A., and how its
+          program of recovery has helped them. Members may bring relatives or friends, and usually anyone
+          interested in A.A. is also welcome.
+        </p>
+        <p>
+          <strong>Closed meetings</strong> are for alcoholics only. These are group discussions where any member
+          who wants to may speak up, ask questions, and share thoughts with fellow members.
+        </p>
+
+        <h2>Why is A.A. "Anonymous"?</h2>
+        <p>
+          Over the years, anonymity has proved one of the greatest gifts that A.A. offers the suffering
+          alcoholic. Without it, many would never attend their first meeting. Anonymity is essential for
+          an atmosphere of trust and openness.
+        </p>
+        <p>
+          Anonymity serves two different yet equally vital functions. First, at the personal level, it provides
+          protection for all members from identification as alcoholics. Secondly, at the level of press, radio,
+          TV, and films, anonymity stresses the equality in the Fellowship of all members.
+        </p>
+
+        <h2>Who Runs A.A.?</h2>
+        <p>
+          A.A. has no real government. Each group or meeting is free to work out its own customs and ways of
+          holding meetings, as long as it does not hurt other groups or A.A. as a whole. A.A. group officers
+          do not give orders — their job is to see that the group runs smoothly.
+        </p>
+        <p>Groups in the same area may set up a central office or "intergroup" office, and groups everywhere
+          share their experiences by writing to the A.A. General Service Office in New York City.</p>
+
+        <h2>What A.A. Does Not Do</h2>
+        <ul>
+          {[
+            "A.A. does not run membership drives to argue alcoholics into joining.",
+            "A.A. does not check up on its members to see that they don't drink.",
+            "A.A. is not a religious organization.",
+            "A.A. is not a medical organization and does not give out medicines or psychiatric advice.",
+            "A.A. does not run hospitals, wards, or sanitariums.",
+            "A.A. is not connected with any other organization.",
+            "A.A. does not accept money from sources outside A.A."
+          ].map((item, i) => <li key={i}>{item}</li>)}
+        </ul>
+
+        <h2>Where to Get More Information</h2>
+        <p>This web site includes telephone numbers for local A.A. central offices and intergroups in
+          southern Wisconsin. You may also contact:</p>
+        <div className="info-card">
+          <h3>A.A. General Service Office</h3>
+          <address>
+            Box 459, Grand Central Station<br/>
+            New York, NY 10163<br/>
+            (212) 870-3400<br/>
+            <a href="https://www.aa.org" target="_blank" rel="noreferrer">www.aa.org</a>
+          </address>
+        </div>
+
+        <span className="cite">Reprinted from: A Brief Guide to Alcoholics Anonymous, P-42, copyright 1972, Alcoholics Anonymous World Services, Inc.</span>
+      </div>
+    </div>
+  );
+}
+
+function PreamblePage() {
+  return (
+    <div className="content-wrapper">
+      <div className="page-header">
+        <h1>The <span style={{color:"var(--accent-dark)"}}>Preamble</span></h1>
+        <div className="page-subtitle">of Alcoholics Anonymous</div>
+      </div>
+      <div className="prose">
+        <div className="blockquote" style={{fontSize:"1.08rem", lineHeight:"1.9", fontStyle:"normal"}}>
+          Alcoholics Anonymous is a fellowship of people who share their experience, strength and hope with
+          each other that they may solve their common problem and help others to recover from alcoholism.
+          The only requirement for membership is the desire to stop drinking. There are no dues or fees for
+          A.A. membership; we are self-supporting through our own contributions. A.A. is not allied with any
+          sect, denomination, politics, organization or institution; does not wish to engage in any
+          controversy; neither endorses nor opposes any causes. Our primary purpose is to stay sober and
+          help other alcoholics to achieve sobriety.
+        </div>
+        <span className="cite">Reprinted from: the A.A. Grapevine, with the permission of the A.A. Grapevine.</span>
+      </div>
+    </div>
+  );
+}
+
+function TwelveStepsPage() {
+  const steps = [
+    "We admitted we were powerless over alcohol — that our lives had become unmanageable.",
+    "Came to believe that a Power greater than ourselves could restore us to sanity.",
+    "Made a decision to turn our will and our lives over to the care of God as we understood Him.",
+    "Made a searching and fearless moral inventory of ourselves.",
+    "Admitted to God, to ourselves, and to another human being the exact nature of our wrongs.",
+    "Were entirely ready to have God remove all these defects of character.",
+    "Humbly asked Him to remove our shortcomings.",
+    "Made a list of all persons we had harmed, and became willing to make amends to them all.",
+    "Made direct amends to such people wherever possible, except when to do so would injure them or others.",
+    "Continued to take personal inventory and when we were wrong promptly admitted it.",
+    "Sought through prayer and meditation to improve our conscious contact with God as we understood Him, praying only for knowledge of His will for us and power to carry that out.",
+    "Having had a spiritual awakening as the result of these steps, we tried to carry this message to alcoholics, and to practice these principles in all our affairs."
+  ];
+  return (
+    <div className="content-wrapper">
+      <div className="page-header">
+        <h1>The Twelve <span style={{color:"var(--accent-dark)"}}>Steps</span></h1>
+        <div className="page-subtitle">of Alcoholics Anonymous</div>
+      </div>
+      <div className="prose">
+        <ul className="numbered-list">
+          {steps.map((s, i) => <li key={i}>{s}</li>)}
+        </ul>
+        <span className="cite">Reprinted from: A Brief Guide to Alcoholics Anonymous, P-42, copyright 1972, Alcoholics Anonymous World Services, Inc.</span>
+      </div>
+    </div>
+  );
+}
+
+function TwelveTraditionsPage() {
+  const traditions = [
+    "Our common welfare should come first; personal recovery depends upon A.A. unity.",
+    "For our group purpose there is but one ultimate authority — a loving God as He may express Himself in our group conscience. Our leaders are but trusted servants; they do not govern.",
+    "The only requirement for A.A. membership is a desire to stop drinking.",
+    "Each group should be autonomous except in matters affecting other groups or A.A. as a whole.",
+    "Each group has but one primary purpose — to carry its message to the alcoholic who still suffers.",
+    "An A.A. group ought never endorse, finance, or lend the A.A. name to any related facility or outside enterprise, lest problems of money, property, and prestige divert us from our primary purpose.",
+    "Every A.A. group ought to be fully self-supporting, declining outside contributions.",
+    "Alcoholics Anonymous should remain forever nonprofessional, but our service centers may employ special workers.",
+    "A.A., as such ought never be organized; but we may create service boards or committees directly responsible to those they serve.",
+    "Alcoholics Anonymous has no opinion on outside issues; hence the A.A. name ought never be drawn into public controversy.",
+    "Our public relations policy is based on attraction rather than promotion; we need always maintain personal anonymity at the level of press, radio, and films.",
+    "Anonymity is the spiritual foundation of all our traditions, ever reminding us to place principles before personalities."
+  ];
+  return (
+    <div className="content-wrapper">
+      <div className="page-header">
+        <h1>The Twelve <span style={{color:"var(--accent-dark)"}}>Traditions</span></h1>
+        <div className="page-subtitle">of Alcoholics Anonymous</div>
+      </div>
+      <div className="prose">
+        <ul className="numbered-list">
+          {traditions.map((t, i) => <li key={i}>{t}</li>)}
+        </ul>
+        <span className="cite">Reprinted from: A Brief Guide to Alcoholics Anonymous, P-42, copyright 1972, Alcoholics Anonymous World Services, Inc.</span>
+      </div>
+    </div>
+  );
+}
+
+function AAResourcesPage() {
+  const offices = [
+    {
+      name: "Madison Area Intergroup Central Office (MAICO)",
+      address: "2820 Walton Commons Suite 101\nMadison, WI 53718",
+      phone: "(608) 222-8989",
+      email: "info@aamadisonwi.org",
+      web: "http://www.aamadisonwi.org/",
+      hours: "Tue–Thu 11am–6pm · Fri–Sat 11am–2pm\n24-hr answering service",
+      counties: "Adams, Sauk, Dodge, Lafayette, Rock, Green Lake, Richland, Green, Iowa, Jefferson, Grant, Dane, Columbia, Juneau, Crawford, Marquette, and portions of southern Waushara."
+    },
+    {
+      name: "Racine Area Central Office",
+      address: "3701 Durand Avenue, #225 B\nRacine, WI 53045",
+      phone: "Office: (262) 554-6611 · Hotline: (262) 554-7788",
+      email: "racostaff@racinecentraloffice.org",
+      web: "http://www.racinecentraloffice.org",
+      hours: "Mon–Fri 9am–5pm · Sat 9am–1pm",
+      counties: "Racine and Kenosha counties."
+    },
+    {
+      name: "Winnebago Land Central Office — Fond du Lac",
+      address: "P.O. Box 572, 86 South Portland\nFond du Lac, WI 54936-0572",
+      phone: "Hotline: (920) 922-7512",
+      email: "winnebagolandco@gmail.com",
+      web: "https://www.fonddulacaa.org/",
+      hours: "Mon–Fri 8am–5pm · Sat 10am–2pm · Sun Closed",
+      counties: "Adams, Calumet, Dodge, Fond du Lac, Green Lake, Manitowoc, Marquette, Outagamie, Sheboygan, Washington, Southern Waushara, and Winnebago."
+    },
+    {
+      name: "Milwaukee Central Office",
+      address: "7429 W. Greenfield Avenue\nWest Allis, WI 53214",
+      phone: "(414) 771-9119",
+      email: null,
+      web: "http://www.aamilwaukee.com",
+      hours: "Mon 9am–4:30pm · Sat 9am–12pm · 24-hr answering service",
+      counties: "Milwaukee, Waukesha, Racine, Walworth, Kenosha, Fond du Lac, Dodge, Jefferson, Ozaukee, Washington, Manitowoc, and Sheboygan."
+    },
+    {
+      name: "LaCrosse Intergroup",
+      address: "Box 1212\nLaCrosse, WI",
+      phone: "(608) 621-2161",
+      email: null,
+      web: "https://aalacrosse.org/",
+      hours: "24-hr answering service",
+      counties: "LaCrosse, Monroe, Jackson, Vernon, Juneau, Crawford and some parts of Houston County, MN and northeastern Iowa."
+    }
+  ];
+  return (
+    <div className="content-wrapper">
+      <div className="page-header">
+        <h1>A.A. <span style={{color:"var(--accent-dark)"}}>Resources</span></h1>
+        <div className="page-subtitle">Located in Area 75 — Southern Wisconsin</div>
+      </div>
+      <div className="prose">
+        <p>
+          The following are the telephone numbers and addresses of the local central offices and intergroups
+          in southern Wisconsin. These offices provide services such as receiving calls from individuals
+          regarding A.A. and meetings, publishing local meeting lists, and distributing A.A. literature.
+        </p>
+        {offices.map((o, i) => (
+          <div className="info-card" key={i}>
+            <h3>{o.name}</h3>
+            <address>
+              {o.address.split("\n").map((l,j)=><span key={j}>{l}<br/></span>)}
+              <br/>
+              📞 {o.phone}<br/>
+              {o.email && <>✉ <a href={`mailto:${o.email}`}>{o.email}</a><br/></>}
+              🌐 <a href={o.web} target="_blank" rel="noreferrer">{o.web}</a><br/><br/>
+              <strong style={{color:"var(--on-blue)"}}>Hours:</strong> {o.hours.split("\n").map((l,j)=><span key={j}>{l}<br/></span>)}<br/>
+              <strong style={{color:"var(--on-blue)"}}>Serves:</strong> {o.counties}
+            </address>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function MessageToTeensPage() {
+  const questions = [
+    "Do you drink because you have problems? To relax?",
+    "Do you drink when you get mad at other people, your friends or parents?",
+    "Do you prefer to drink alone, rather than with others?",
+    "Are your grades starting to slip? Are you goofing off on your job?",
+    "Did you ever try to stop drinking or drink less — and fail?",
+    "Have you begun to drink in the morning, before school or work?",
+    "Do you gulp your drinks?",
+    "Do you ever have loss of memory due to your drinking?",
+    "Do you lie about your drinking?",
+    "Do you ever get into trouble when you're drinking?",
+    "Do you get drunk when you drink, even when you don't mean to?",
+    "Do you think it's cool to be able to hold your liquor?"
+  ];
+  return (
+    <div className="content-wrapper">
+      <div className="page-header">
+        <h1>A Message to <span style={{color:"var(--accent-dark)"}}>Teenagers</span></h1>
+        <div className="page-subtitle">How to tell when drinking is becoming a problem</div>
+      </div>
+      <div className="prose">
+        <ul className="numbered-list">
+          {questions.map((q, i) => <li key={i}>{q}</li>)}
+        </ul>
+        <div className="blockquote" style={{marginTop:"1.5rem", fontStyle:"normal"}}>
+          If you can answer yes to <strong>any one</strong> of these questions, maybe it's time you took a
+          serious look at what your drinking might be doing to you.
+        </div>
+        <p style={{marginTop:"1rem"}}>
+          And, if you do need help or if you'd just like to talk to someone about your drinking, call us at
+          Alcoholics Anonymous. This web site includes <a href="#aaresources">telephone numbers</a> for all
+          of southern Wisconsin.
+        </p>
+        <span className="cite">Reprinted from: A Message to Teenagers, F-9, copyright 1988 by AA World Services, Inc.</span>
+      </div>
+    </div>
+  );
+}
+
+function StructurePage() {
+  const committees = [
+    { name: "Archives", desc: "Maintains a repository of items concerning the history of A.A. in Area 75 including assembly minutes, service committee minutes, district meeting minutes, and other historical materials." },
+    { name: "Cooperation with the Professional Community (CPC)", desc: "Brings the A.A. message to professional groups and individuals who have contact with alcoholics, furthering mutual understanding between A.A. and these professionals." },
+    { name: "Corrections", desc: "Encourages A.A. members to carry the message to alcoholics behind the walls. Reviews all aspects of service to A.A. groups in correction facilities." },
+    { name: "Grapevine", desc: "Chaired by the immediate past delegate; responsible for encouraging and supporting activities related to distribution of the Grapevine Magazine." },
+    { name: "Literature", desc: "Responsible for maintaining a display of all A.A. Conference approved literature and audio-visual materials and making them available for members and groups." },
+    { name: "Public Information (PI)", desc: "Creates greater understanding of the A.A. program through public and electronic media, public information meetings, and speaking to community groups." },
+    { name: "Accessibilities", desc: "Focuses on the needs of A.A. members who may need special help to participate in A.A. meetings, such as transportation, interpreters, or special audio/visual help." },
+    { name: "Technology", desc: "Helps the Area with technology issues, such as maintaining the website, running hybrid meetings, and assisting the Area Committee with Google Workspace." },
+    { name: "Treatment", desc: "Coordinates the work of A.A. members and groups who carry the message to alcoholics in treatment facilities and sets up means of bridging the gap from treatment to A.A." },
+  ];
+  return (
+    <div className="content-wrapper">
+      <div className="page-header">
+        <h1>The <span style={{color:"var(--accent-dark)"}}>Structure</span> of A.A.</h1>
+        <div className="page-subtitle">How Area 75 — Southern Wisconsin is organized</div>
+      </div>
+      <div className="prose">
+        <h2>Introduction</h2>
+        <p>
+          The Twelve Traditions of A.A. make clear the principle that A.A. should never be organized, that
+          there are no bosses and no government. Yet the Traditions recognize the need for some kind of
+          organization to carry the message in ways impossible for the local groups — such as publication of
+          uniform literature and public information resources, helping new groups get started, and carrying
+          the message into other countries.
+        </p>
+        <p>
+          The Conference structure of A.A. is the framework in which these "general services" are carried out.
+          It is a method by which A.A.'s collective group conscience can speak and put its desires for
+          worldwide services into effect.
+        </p>
+
+        <h2>How A.A. is Organized</h2>
+        <p>
+          A.A. has been called an upside-down organization because, by looking at an organizational chart,
+          the A.A. group or meeting is on top and "headquarters" is on the bottom. Each A.A. group may elect
+          a general service representative (GSR) to represent the group at district and area business meetings.
+          Groups form districts, and districts form areas.
+        </p>
+        <p>
+          <strong>Area 75</strong> represents the A.A. groups meeting in the southern region of Wisconsin.
+          Each area in the U.S. and Canada elects a delegate to attend an annual Conference.
+        </p>
+
+        <h2>How Area 75 is Organized</h2>
+        <p>
+          Area 75 comprises thirty-one (31) geographic districts plus District 10, which represents
+          Spanish-speaking A.A. groups. Officers are elected from the membership in even-numbered years,
+          including a chairperson, alternate chairperson, delegate, alternate delegate, secretary, alternate
+          secretary, treasurer, and alternate treasurer. The term of office is two years.
+        </p>
+        <p>
+          The Area holds several business meetings per year: a Winter Service Assembly, Spring Service
+          Assembly, Summer Service Assembly, Fall Pre-Conference Service Assembly, and Fall Conference Assembly.
+        </p>
+
+        <h2>Area 75 Service Committees</h2>
+        <div style={{display:"grid", gridTemplateColumns:"repeat(auto-fit, minmax(280px,1fr))", gap:"0.75rem", marginTop:"0.5rem"}}>
+          {committees.map((c, i) => (
+            <div className="info-card" key={i}>
+              <h3>{c.name}</h3>
+              <p style={{marginBottom:0}}>{c.desc}</p>
+            </div>
+          ))}
+        </div>
+
+        <h2>Key Literature</h2>
+        <a className="resource-link" href="https://www.aa.org/aa-service-manual" target="_blank" rel="noreferrer">The A.A. Service Manual Combined With Twelve Concepts for World Service</a>
+        <a className="resource-link" href="https://www.aa.org/inside-aa-understanding-fellowship-and-its-services" target="_blank" rel="noreferrer">Inside A.A. — Understanding the Fellowship and Its Services</a>
+        <a className="resource-link" href="https://www.aa.org/circles-love-and-service" target="_blank" rel="noreferrer">Circles of Love and Service — Service Structure Diagrams</a>
+        <a className="resource-link" href="https://area75.org/pdfs/area75assemblyactions" target="_blank" rel="noreferrer">Southern Wisconsin Area 75 Assembly Actions</a>
+        <a className="resource-link" href="https://area75.org/pdfs/area75handbook" target="_blank" rel="noreferrer">Southern Wisconsin Area 75 Handbook</a>
+      </div>
+    </div>
+  );
+}
+
+function AccessibilitiesPage() {
+  return (
+    <div className="content-wrapper">
+      <div className="page-header">
+        <h1><span style={{color:"var(--accent-dark)"}}>Accessibilities</span> Committee</h1>
+        <div className="page-subtitle">Removing Barriers to the AA Message</div>
+      </div>
+      <div className="prose">
+        <div className="blockquote">
+          "I am responsible. When anyone, anywhere, reaches out for help, I want the hand of A.A. always
+          to be there. And for that: I am responsible."
+        </div>
+
+        <p style={{marginTop:"1rem"}}>
+          The purpose of the Area 75 Accessibilities Committee is to assist AA members to find solutions
+          to ensure that every alcoholic can participate in A.A. meetings, twelfth step work, and A.A. service.
+          Our goal is to problem solve ways to carry the message of Alcoholics Anonymous to <em>all</em> alcoholics
+          who reach out — removing mental, physical, geographical, cultural, emotional, and technical barriers,
+          whether seen or unseen.
+        </p>
+
+        <div className="info-card">
+          <h3>Contact</h3>
+          <p>Area 75 Accessibilities Chair: Amy V.<br/>
+          📞 (414) 436-5282<br/>
+          ✉ <a href="mailto:accessibilities@area75.org">accessibilities@area75.org</a></p>
+        </div>
+
+        <h2>Resources</h2>
+        <a className="resource-link" href="https://area75.org/pdfs/viewer/self_assessment_guide" target="_blank" rel="noreferrer">Wisconsin Area 75 AA Accessibility Self Assessment Guide</a>
+        <a className="resource-link" href="https://www.aa.org/assets/en_US/special-needs-accessibilities-committees/m-48i-special-needsaccessibilities-workbook" target="_blank" rel="noreferrer">Accessibilities Workbook</a>
+        <a className="resource-link" href="https://www.aa.org/aa-guidelines-accessibility-all-alcoholics" target="_blank" rel="noreferrer">A.A. Guidelines on Accessibility for All Alcoholics</a>
+        <a className="resource-link" href="https://www.aa.org/assets/en_US/p-22_AAfortheOlderAA.pdf" target="_blank" rel="noreferrer">AA for the Older Alcoholic</a>
+        <a className="resource-link" href="https://www.aa.org/assets/en_US/mg-13_carryingtheaa.pdf" target="_blank" rel="noreferrer">Sharing the AA Message with the Alcoholic Who is Deaf</a>
+        <a className="resource-link" href="https://aa-intergroup.org/" target="_blank" rel="noreferrer">AA Intergroup Online Meetings</a>
+        <a className="resource-link" href="https://sites.google.com/view/deafaa/home" target="_blank" rel="noreferrer">Deaf-AA Meetings</a>
+        <a className="resource-link" href="https://www.aa.org/sites/default/files/literature/F-107_0325.pdf" target="_blank" rel="noreferrer">Making the AA Message Accessible</a>
+      </div>
+    </div>
+  );
+}
+
+function ArchivesPage() {
+  return (
+    <div className="content-wrapper">
+      <div className="page-header">
+        <h1><span style={{color:"var(--accent-dark)"}}>Archives</span> Committee</h1>
+      </div>
+      <div className="prose">
+        <h2>Mission Statement</h2>
+        <p>
+          The Archives of Alcoholics Anonymous, Area 75, serves as the repository for materials related
+          to A.A., focusing mainly on the origins and growth of A.A. in Southern Wisconsin.
+        </p>
+
+        <h2>Purpose</h2>
+        <p>
+          The purpose of the Archives Committee for Area 75 is to collect, organize, preserve, and provide
+          access to historically important A.A. materials — especially those related to Area 75 and its
+          districts — while protecting member anonymity. It also aims to support and train other area
+          archives chairs through resources and events, and to carry the A.A. message by sharing Southern
+          Wisconsin's A.A. history.
+        </p>
+        <p style={{fontSize:"0.8rem", color:"var(--on-blue-dim)"}}>Adopted: March 21, 2026 · Alcoholics Anonymous, Area 75, Archives Committee</p>
+
+        <h2>Resources & Forms</h2>
+        <a className="resource-link" href="https://area75.org/pdfs/viewer/aa_history_wisconsin" target="_blank" rel="noreferrer">Alcoholics Anonymous History in Wisconsin</a>
+        <a className="resource-link" href="https://drive.google.com/file/d/1atD0rIYkt6_g4YKKcbt5g0k76jRK8wNV/view?usp=sharing" target="_blank" rel="noreferrer">What to Send to Archives</a>
+        <a className="resource-link" href="https://drive.google.com/file/d/118tf6z-Cdk0xqDCw_5pgpXITykhWooSi/view?usp=share_link" target="_blank" rel="noreferrer">Group History Form — English</a>
+        <a className="resource-link" href="https://drive.google.com/file/d/1xkqU89I6aQQz8LCpP1Eg5Jl-nRv96Tyr/view?usp=sharing" target="_blank" rel="noreferrer">Group History Form — Spanish</a>
+        <a className="resource-link" href="https://drive.google.com/file/d/1Fyzf_BYuzO-9ntupwbY_dnPaIXnossBi/view?usp=sharing" target="_blank" rel="noreferrer">Oral History Document</a>
+        <a className="resource-link" href="https://drive.google.com/file/d/1m81CapXCdD6zz4KEEFYBMiQMcT2s-6tT/view?usp=sharing" target="_blank" rel="noreferrer">Archives Room Hours</a>
+      </div>
+    </div>
+  );
+}
+
+function CorrectionsPage() {
+  return (
+    <div className="content-wrapper">
+      <div className="page-header">
+        <h1><span style={{color:"var(--accent-dark)"}}>Corrections</span> Committee</h1>
+      </div>
+      <div className="prose">
+        <p>
+          The Corrections Literature Fund provides AA and Grapevine literature to jails and prisons in
+          Area 75. There are currently AA meetings for incarcerated A.A. members at many Area 75
+          correctional facilities. Carrying the message keeps us sober and is a good way to give back
+          what was so "freely" given to us.
+        </p>
+
+        <div className="info-card">
+          <h3>Make a Donation</h3>
+          <address>
+            Area 75 Treasurer<br/>
+            ATTENTION: Corrections Literature Fund<br/>
+            6580 Monona Drive #1040<br/>
+            Monona, WI 53716
+          </address>
+        </div>
+
+        <div className="info-card">
+          <h3>Volunteer or Questions</h3>
+          <p>
+            Contact Fred K., Area 75 Corrections Chair<br/>
+            📞 608-296-5084<br/>
+            ✉ <a href="mailto:corrections@area75.org">corrections@area75.org</a>
+          </p>
+        </div>
+
+        <h2>Pre-Release Forms</h2>
+        <p>For inmates requesting an outside writer:</p>
+        <div style={{display:"flex", gap:"0.5rem", flexWrap:"wrap"}}>
+          <a className="resource-link" href="https://drive.google.com/file/d/1JKwmjMMwxQHig5I0fzhZGFgwHmWsvxZu/view?usp=share_link" target="_blank" rel="noreferrer">Pre-release Form (Inmate) — English</a>
+          <a className="resource-link" href="https://drive.google.com/file/d/1NT_j9dKbDoKa7uVMsSstvx05gJFG2JDX/view?usp=share_link" target="_blank" rel="noreferrer">Pre-release Form (Inmate) — Spanish</a>
+        </div>
+        <p style={{marginTop:"0.8rem"}}>For outside volunteers:</p>
+        <div style={{display:"flex", gap:"0.5rem", flexWrap:"wrap"}}>
+          <a className="resource-link" href="https://drive.google.com/file/d/1tYdivDGSfan9LGOTncrcHlVAKLnk9HvB/view?usp=share_link" target="_blank" rel="noreferrer">Pre-release Form (Volunteer) — English</a>
+          <a className="resource-link" href="https://drive.google.com/file/d/122Myx0Fx6SZ5y1yA0JIBPgr4ZkvbJJ1G/view?usp=share_link" target="_blank" rel="noreferrer">Pre-release Form (Volunteer) — Spanish</a>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function CPCPage() {
+  return (
+    <div className="content-wrapper">
+      <div className="page-header">
+        <h1><span style={{color:"var(--accent-dark)"}}>CPC</span> Committee</h1>
+        <div className="page-subtitle">Cooperation with the Professional Community</div>
+      </div>
+      <div className="prose">
+        <p>
+          The purpose of the Cooperation with the Professional Committee is to provide accurate information
+          about AA to those who have contact with alcoholics through their profession as well as those
+          working in the field of alcoholism.
+        </p>
+        <p>Members of CPC committees inform professionals and future professionals about AA, focusing on:</p>
+        <ul>
+          <li>Establishing better communication with professionals working with alcoholics</li>
+          <li>Finding simple, effective ways of cooperating without affiliating</li>
+          <li>Explaining clearly what A.A. does and doesn't do</li>
+        </ul>
+
+        <div className="info-card">
+          <h3>Contact</h3>
+          <p>CPC Committee Chairperson: Linda B.<br/>
+          📞 608-403-7255<br/>
+          ✉ <a href="mailto:CPC@area75.org">CPC@area75.org</a></p>
+        </div>
+
+        <h2>Resources</h2>
+        <a className="resource-link" href="https://www.aa.org/cooperation-professional-community-cpc-workbook" target="_blank" rel="noreferrer">CPC Workbook</a>
+        <a className="resource-link" href="https://www.aa.org/contents-cpc-kit-list" target="_blank" rel="noreferrer">CPC Kit</a>
+        <a className="resource-link" href="https://www.aa.org/about-aa" target="_blank" rel="noreferrer">Subscribe to AA's "About AA" Newsletter for Professionals</a>
+        <a className="resource-link" href="https://www.aa.org/aa-for-professionals" target="_blank" rel="noreferrer">AA for Professionals</a>
+        <a className="resource-link" href="https://www.aa.org/aa-resource-health-care-professional" target="_blank" rel="noreferrer">AA Resource: Health Care Professionals</a>
+        <a className="resource-link" href="https://www.aa.org/there-problem-drinker-workplace" target="_blank" rel="noreferrer">AA Resource: Employers / Human Resources</a>
+        <a className="resource-link" href="https://www.aa.org/faith-leaders-ask-about-aa" target="_blank" rel="noreferrer">AA Resource: Clergy</a>
+        <a className="resource-link" href="https://www.aa.org/aa-resource-drug-alcohol-court-professionals" target="_blank" rel="noreferrer">AA Resource: Drug and Alcohol Court Professionals</a>
+        <a className="resource-link" href="https://www.aa.org/message-corrections-professionals" target="_blank" rel="noreferrer">AA Resource: Corrections Professionals</a>
+      </div>
+    </div>
+  );
+}
+
+function FinancePage() {
+  return (
+    <div className="content-wrapper">
+      <div className="page-header">
+        <h1><span style={{color:"var(--accent-dark)"}}>Finance</span> Committee</h1>
+      </div>
+      <div className="prose">
+        <div className="info-card">
+          <h3>Send Contributions To</h3>
+          <address>
+            Area 75 Treasurer<br/>
+            6580 Monona Drive #1040<br/>
+            Monona, WI 53716<br/><br/>
+            ✉ <a href="mailto:treasurer@area75.org">treasurer@area75.org</a>
+          </address>
+        </div>
+
+        <h2>Forms & Resources</h2>
+        <a className="resource-link" href="https://area75.org/pdfs/viewer/contributions" target="_blank" rel="noreferrer">Area Contribution Form</a>
+        <a className="resource-link" href="https://docs.google.com/forms/d/1qSkySEcQ9qTf_8NBj6eGzrDaKvQluRlLBAcys0dpYV8/viewform" target="_blank" rel="noreferrer">Expense Report Form</a>
+        <a className="resource-link" href="https://drive.google.com/file/d/1QjoY6Q2Z7kdHsUPzmm_i4yv-FAc0Rbsu/view?usp=sharing" target="_blank" rel="noreferrer">Area Expense Reimbursement Matrix</a>
+      </div>
+    </div>
+  );
+}
+
+function GrapevinePage() {
+  return (
+    <div className="content-wrapper">
+      <div className="page-header">
+        <h1><span style={{color:"var(--accent-dark)"}}>Grapevine / LaViña</span> Committee</h1>
+        <div className="page-subtitle">The International Journal of Alcoholics Anonymous</div>
+      </div>
+      <div className="prose">
+        <p>
+          The Area 75 Grapevine/LaViña Committee is a place where those with an interest in the A.A.
+          Grapevine hear news about the magazine and its books and other products. We share experience,
+          strength and hope with regard to our own use of the Grapevine in our recoveries, in our group
+          life, and in our service to A.A.
+        </p>
+        <p>
+          The committee meets during the Area 75 Winter Service Assembly, Delegate's Workshop, Summer
+          Service Assembly, and Fall Pre-Conference Service Assembly, and also on Saturday afternoon of
+          the Annual Area 75 Conference.
+        </p>
+        <p>
+          New to Area 75 is our monthly <strong>Grapevine/LaViña Committee Newsletter</strong>, which
+          offers a list of GV/LV meetings and upcoming events, news, story topics and submission dates,
+          a featured book, trivia, and an AA Grapevine joke — because "we are not a glum lot."
+        </p>
+
+        <div className="blockquote">
+          Being a GvR is a <strong>GREAT</strong> way for you or your sponsees to enter service work! Join us!
+        </div>
+
+        <div className="info-card">
+          <h3>Contact</h3>
+          <p>✉ <a href="mailto:grapevine@area75.org">grapevine@area75.org</a></p>
+        </div>
+
+        <h2>Service Materials</h2>
+        <a className="resource-link" href="https://drive.google.com/drive/folders/1KI26v198FoalKxT1_v1VKNFccibzxCLD?usp=sharing" target="_blank" rel="noreferrer">Newsletters Archive</a>
+        <a className="resource-link" href="https://www.aagrapevine.org/sites/default/files/2020-01/GV-Handbook-01-2016.pdf" target="_blank" rel="noreferrer">Grapevine Handbook</a>
+        <a className="resource-link" href="https://www.aagrapevine.org/sites/default/files/2020-01/GV-Workbook-6-11-18.pdf" target="_blank" rel="noreferrer">Grapevine Workbook</a>
+        <a className="resource-link" href="https://www.aagrapevine.org/sites/default/files/2021-04/GV-2021_Catalog.pdf" target="_blank" rel="noreferrer">Grapevine Catalog</a>
+        <a className="resource-link" href="https://www.aagrapevine.org/sites/default/files/2020-01/GV_Guidelines_April19_Edited.pdf" target="_blank" rel="noreferrer">Grapevine Guidelines</a>
+        <a className="resource-link" href="https://www.aagrapevine.org/sites/default/files/2020-02/GVR-Registration-Form.pdf" target="_blank" rel="noreferrer">Rep Registration Form</a>
+        <a className="resource-link" href="https://aagrapevine.org" target="_blank" rel="noreferrer">aagrapevine.org</a>
+        <a className="resource-link" href="https://aalavina.org" target="_blank" rel="noreferrer">aalavina.org</a>
+      </div>
+    </div>
+  );
+}
+
+function LiteraturePage() {
+  return (
+    <div className="content-wrapper">
+      <div className="page-header">
+        <h1><span style={{color:"var(--accent-dark)"}}>Literature</span> Committee</h1>
+        <div className="page-subtitle">Area 75 — Southern Wisconsin</div>
+      </div>
+      <div className="prose">
+        <p>
+          The Area 75 Literature Committee concerns itself with both General Service Approved and A.A.
+          Service literature — in printed, web, audio, and audiovisual forms. Membership is open to DCMs,
+          GSRs, District Literature Chairs, and any member with an interest in A.A.'s literature.
+        </p>
+
+        <div className="info-card">
+          <h3>Monthly Meeting — Third Tuesday, 7–8pm CT</h3>
+          <p>
+            Via Google Meet<br/>
+            🔗 <a href="https://meet.google.com/cpz-szun-nhy" target="_blank" rel="noreferrer">meet.google.com/cpz-szun-nhy</a><br/>
+            📞 Dial-in: (US) +1 586-799-3314 · PIN: 280 403 107#
+          </p>
+        </div>
+
+        <p>
+          The committee also meets whenever the Area 75 Standing Committees meet in conjunction with Area
+          assemblies. We use a round-the-table format to share experience, strength, and hope on the subject
+          of carrying AA's message through its literature.
+        </p>
+
+        <div className="blockquote">
+          After our Fellowship had been in existence for twenty-five years, Bill W. wrote that our message
+          would have by then become hopelessly garbled as it was transmitted by word of mouth… By joining
+          the Area 75 Literature Committee, you can share in the vital work of making literature available.
+        </div>
+
+        <h2>Meeting Agenda</h2>
+        <a className="resource-link" href="https://docs.google.com/document/d/1tgi5lWJgLmLSgQJSFegbNwvr9zrZpUayd0l7r6MJ4Vg/edit?usp=sharing" target="_blank" rel="noreferrer">Rolling Literature Committee Meeting Agenda</a>
+      </div>
+    </div>
+  );
+}
+
+function PublicInfoPage() {
+  return (
+    <div className="content-wrapper">
+      <div className="page-header">
+        <h1><span style={{color:"var(--accent-dark)"}}>Public Information</span> Committee</h1>
+      </div>
+      <div className="prose">
+        <p>
+          Public Information (P.I.) in Alcoholics Anonymous means carrying the message of recovery to the
+          still suffering alcoholic by informing the general public about the A.A. program. We carry the
+          message by getting in touch with media, schools, industry, and other organizations which can
+          report on the nature and purpose of A.A.
+        </p>
+        <p>
+          The Area 75 PI Committee meets at the Winter, Summer, and Fall Service Assemblies and on Saturday
+          afternoon of the Annual Area 75 Conference. We use a round-the-table format to share experience,
+          strength, and hope on effectively carrying the A.A. message to the general public and media
+          representatives. Any district PI Chair, DCM, GSR, or interested AA member is most welcome.
+        </p>
+
+        <div className="info-card">
+          <h3>Contact</h3>
+          <p>✉ <a href="mailto:pi@area75.org">pi@area75.org</a></p>
+          <p style={{marginTop:"0.5rem"}}>Contact for information, literature, or to submit event information/flyers to the Area 75 calendar.</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function TreatmentPage() {
+  return (
+    <div className="content-wrapper">
+      <div className="page-header">
+        <h1><span style={{color:"var(--accent-dark)"}}>Treatment</span> Committee</h1>
+      </div>
+      <div className="prose">
+        <p>
+          The purpose of the Area 75 Treatment Committee is to help AA members carry the message of
+          Alcoholics Anonymous into Treatment Facilities, and help "Bridge the Gap" between the
+          Facilities and AA.
+        </p>
+        <p>
+          If you are sober and have a desire to serve, or would like more information, contact the Chair
+          of our Area Treatment Committee. She can help you get started and introduce you to people in
+          your district already involved in this work.
+        </p>
+
+        <div className="info-card">
+          <h3>Contact</h3>
+          <p>✉ <a href="mailto:treatment@area75.org">treatment@area75.org</a></p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function TechnologyPage() {
+  return (
+    <div className="content-wrapper">
+      <div className="page-header">
+        <h1><span style={{color:"var(--accent-dark)"}}>Technology</span> Committee</h1>
+      </div>
+      <div className="prose">
+        <p>
+          The Technology Committee helps the Area with technology issues, such as maintaining the website,
+          running Area hybrid meetings, and assisting the Area Committee with Google Workspace.
+        </p>
+        <p>
+          Upcoming Technology Committee meetings are available by contacting the technology chairperson for
+          login information.
+        </p>
+
+        <div className="info-card">
+          <h3>Technology Resources</h3>
+          <p>
+            ✉ Technology Chairperson: <a href="mailto:technology@area75.org">technology@area75.org</a><br/>
+            ✉ Webmaster: <a href="mailto:Webmaster@area75.org">Webmaster@area75.org</a>
+          </p>
+        </div>
+
+        <h2>Helpful Links</h2>
+        <a className="resource-link" href="https://docs.google.com/document/d/e/2PACX-1vRS2MGcGN9AFFDIIJFSgYXhL5hQr74yyyminLbpFMe7iGVTSUhvrd0ok9qWBms-YQ/pub" target="_blank" rel="noreferrer">Add Events to Area Calendar — Instructions</a>
+        <a className="resource-link" href="https://docs.google.com/document/d/e/2PACX-1vQuTaHxcXiLJ8_vSzEdvo9Ovck8dWVcuJwaq-ciKlsCcqkn5oSgHYkfeyzz7-ZhBA/pub" target="_blank" rel="noreferrer">Zoom Guidelines for Area Assemblies</a>
+      </div>
+    </div>
+  );
+}
+
+function DistrictMeetingsPage() {
+  return (
+    <div className="content-wrapper">
+      <div className="page-header">
+        <h1><span style={{color:"var(--accent-dark)"}}>District</span> Meetings</h1>
+      </div>
+      <div className="prose">
+        <p>
+          Area 75 comprises thirty-one geographic districts and District 10, which represents Spanish-speaking
+          A.A. groups in the Area. Each district holds regular business meetings where General Service
+          Representatives (GSRs) and District Committee Members (DCMs) gather to conduct A.A. service work.
+        </p>
+        <p>
+          For specific district meeting schedules and locations, please contact your local central office or
+          visit the full Area 75 website.
+        </p>
+        <a className="resource-link" href="https://area75.org/page/districtmeetings" target="_blank" rel="noreferrer">View District Meetings on Area75.org</a>
+        <a className="resource-link" href="https://area75.org/business/" target="_blank" rel="noreferrer">Area Business Meetings</a>
+      </div>
+    </div>
+  );
+}
+
+function RegistrarPage() {
+  return (
+    <div className="content-wrapper">
+      <div className="page-header">
+        <h1><span style={{color:"var(--accent-dark)"}}>Registrar</span></h1>
+      </div>
+      <div className="prose">
+        <p>
+          The Area 75 Registrar maintains records of A.A. groups and their service representatives within
+          southern Wisconsin. Group registration is an important part of maintaining connection between
+          groups, districts, the Area, and the General Service Conference.
+        </p>
+        <a className="resource-link" href="https://area75.org/page/registrar" target="_blank" rel="noreferrer">Registrar Information on Area75.org</a>
+      </div>
+    </div>
+  );
+}
+
+// ── MEETINGS PAGE ────────────────────────────────────────────────────────────
+
+function MeetingsPage() {
+  const [dayFilter, setDayFilter] = useState("All");
+  const [typeFilter, setTypeFilter] = useState("All");
+
+  const DAYS = ["All","Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+  const TYPES = ["All","Open","Closed","Online","Hybrid","Spanish"];
+
+  const offices = [
+    {
+      name: "Madison Area Intergroup (MAICO)",
+      region: "Dane, Columbia, Dodge, Grant, Green, Iowa, Jefferson, Juneau, Marquette, Richland, Rock, Sauk + more",
+      phone: "(608) 222-8989",
+      email: "info@aamadisonwi.org",
+      web: "http://www.aamadisonwi.org/",
+      hours: "Tue–Thu 11am–6pm · Fri–Sat 11am–2pm · 24-hr answering service",
+    },
+    {
+      name: "Racine Area Central Office",
+      region: "Racine & Kenosha counties",
+      phone: "(262) 554-6611",
+      hotline: "(262) 554-7788",
+      email: "racostaff@racinecentraloffice.org",
+      web: "http://www.racinecentraloffice.org",
+      hours: "Mon–Fri 9am–5pm · Sat 9am–1pm",
+    },
+    {
+      name: "Winnebago Land Central Office",
+      region: "Fond du Lac, Calumet, Manitowoc, Sheboygan, Washington, Winnebago + more",
+      phone: "(920) 922-7512",
+      email: "winnebagolandco@gmail.com",
+      web: "https://www.fonddulacaa.org/",
+      hours: "Mon–Fri 8am–5pm · Sat 10am–2pm",
+    },
+    {
+      name: "Milwaukee Central Office",
+      region: "Milwaukee, Waukesha, Walworth, Ozaukee + more",
+      phone: "(414) 771-9119",
+      web: "http://www.aamilwaukee.com",
+      hours: "Mon 9am–4:30pm · Sat 9am–12pm · 24-hr answering service",
+    },
+    {
+      name: "LaCrosse Intergroup",
+      region: "LaCrosse, Monroe, Jackson, Vernon, Crawford + parts of MN & IA",
+      phone: "(608) 621-2161",
+      web: "https://aalacrosse.org/",
+      hours: "24-hr answering service",
+    },
+  ];
+
+  const meetingTypes = [
+    {
+      code: "O", label: "Open",
+      desc: "Open to anyone — alcoholics, family, friends, and those curious about A.A. Speakers share their experience, strength, and hope."
+    },
+    {
+      code: "C", label: "Closed",
+      desc: "For people who think they may have a drinking problem. Discussion format, for A.A. members and those who want to stop drinking."
+    },
+    {
+      code: "H", label: "Hybrid",
+      desc: "In-person meeting with a simultaneous Zoom option. Both modes are fully participatory."
+    },
+    {
+      code: "ONL", label: "Online Only",
+      desc: "Conducted entirely via Zoom or another video platform. No physical location required."
+    },
+    {
+      code: "ES", label: "Spanish",
+      desc: "Spanish-language meetings. District 10 coordinates Spanish-speaking A.A. groups throughout Area 75."
+    },
+    {
+      code: "BB", label: "Big Book",
+      desc: "Study of the book Alcoholics Anonymous — the foundational text of the A.A. program."
+    },
+    {
+      code: "12×12", label: "Step & Tradition",
+      desc: "Study of the Twelve Steps and Twelve Traditions book."
+    },
+    {
+      code: "S", label: "Speaker",
+      desc: "One or more members tell their story — what it was like, what happened, and what it's like now."
+    },
+    {
+      code: "D", label: "Discussion",
+      desc: "Open discussion where any member may share on a topic or their experience."
+    },
+    {
+      code: "W / M / Y", label: "Special Focus",
+      desc: "W = Women only · M = Men only · Y = Young people focus. Check the meeting finder for current schedules."
+    },
+  ];
+
+  return (
+    <>
+      {/* Header — midnight blue */}
+      <div className="meetings-intro">
+        <h1>Find a <span>Meeting</span></h1>
+        <p>AA meetings across Southern Wisconsin — Area 75 covers 31+ geographic districts.</p>
+        <div style={{marginTop:"1rem"}}>
+          <a
+            href="https://mtg.area75.org/meetings"
+            target="_blank"
+            rel="noreferrer"
+            style={{
+              display:"inline-block", background:"var(--accent)", color:"#fff",
+              padding:"0.55rem 1.4rem", borderRadius:"30px", fontWeight:"bold",
+              fontSize:"0.9rem", textDecoration:"none", marginRight:"0.75rem"
+            }}
+          >Open Full Meeting Finder ↗</a>
+        </div>
+      </div>
+
+      {/* Main — yellow background */}
+      <div className="meetings-meta">
+
+        {/* Central Office Cards */}
+        <div className="page-header" style={{marginTop:0}}>
+          <h1 style={{color:"var(--on-yellow)"}}>Call Your Central Office</h1>
+          <div className="page-subtitle">All offices maintain a 24-hour answering service. Call anytime.</div>
+        </div>
+
+        <div style={{display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(280px,1fr))", gap:"1rem", marginBottom:"2.5rem"}}>
+          {offices.map((o, i) => (
+            <div className="info-card" key={i} style={{marginBottom:0}}>
+              <h3>{o.name}</h3>
+              <p>
+                <span style={{fontSize:"0.75rem", color:"var(--on-blue-dim)", display:"block", marginBottom:"0.4rem"}}>{o.region}</span>
+                📞 <strong style={{color:"var(--on-blue)"}}>{o.phone}</strong>
+                {o.hotline && <><br/>🆘 Hotline: <strong style={{color:"var(--accent)"}}>{o.hotline}</strong></>}
+                {o.email && <><br/>✉ <a href={`mailto:${o.email}`}>{o.email}</a></>}
+                <br/>🌐 <a href={o.web} target="_blank" rel="noreferrer">{o.web.replace(/https?:\/\//,"")}</a>
+                <br/><span style={{fontSize:"0.78rem", color:"var(--on-blue-dim)", display:"block", marginTop:"0.35rem"}}>🕐 {o.hours}</span>
+              </p>
+            </div>
+          ))}
+        </div>
+
+        {/* Meeting Type Cards */}
+        <div className="page-header">
+          <h1 style={{color:"var(--on-yellow)"}}>Meeting Types</h1>
+          <div className="page-subtitle">Understanding what each meeting format means.</div>
+        </div>
+
+        <div className="meeting-type-grid" style={{marginBottom:"2.5rem"}}>
+          {meetingTypes.map((t, i) => (
+            <div className="meeting-type-card" key={i}>
+              <h3><span style={{background:"var(--accent)", color:"#fff", borderRadius:"4px", padding:"0.1rem 0.45rem", marginRight:"0.5rem", fontSize:"0.7rem", fontFamily:"Arial,sans-serif"}}>{t.code}</span>{t.label}</h3>
+              <p>{t.desc}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* Corrections */}
+        <div className="prose">
+          <h2>Meeting Updates &amp; Corrections</h2>
+          <p>To report a new meeting, a change, or a correction to the meeting list, email <a href="mailto:Webmaster@area75.org">Webmaster@area75.org</a>. New group registration forms are also available on the Area 75 business page.</p>
+          <a className="resource-link" href="https://mtg.area75.org/meetings" target="_blank" rel="noreferrer">Full interactive meeting finder (mtg.area75.org)</a>
+          <a className="resource-link" href="https://mtg.area75.org/locations/search" target="_blank" rel="noreferrer">Search meeting locations by address</a>
+        </div>
+      </div>
+    </>
+  );
+}
+
+// ── EVENTS PAGE ───────────────────────────────────────────────────────────────
+
+function MiniCal({ year, month, highlightDays = [], rangeDays = [] }) {
+  const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  const dow = ["Su","Mo","Tu","We","Th","Fr","Sa"];
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const today = new Date();
+  const cells = [];
+  for (let i = 0; i < firstDay; i++) cells.push(null);
+  for (let d = 1; d <= daysInMonth; d++) cells.push(d);
+  while (cells.length % 7 !== 0) cells.push(null);
+
+  function classFor(d) {
+    if (!d) return "cal-day faded";
+    if (highlightDays.includes(d)) return "cal-day has-event";
+    const rangeInfo = rangeDays.find(r => d >= r.start && d <= r.end);
+    if (rangeInfo) {
+      if (d === rangeInfo.start) return "cal-day event-range event-range-start";
+      if (d === rangeInfo.end)   return "cal-day event-range event-range-end";
+      return "cal-day event-range";
+    }
+    if (today.getFullYear() === year && today.getMonth() === month && today.getDate() === d) return "cal-day today";
+    return "cal-day";
+  }
+
+  return (
+    <div className="mini-cal">
+      <div className="mini-cal-header">{monthNames[month]} {year}</div>
+      <div className="mini-cal-dow">{dow.map(d => <span key={d}>{d}</span>)}</div>
+      <div className="mini-cal-days">
+        {cells.map((d, i) => (
+          <div key={i} className={classFor(d)}>{d || ""}</div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function EventsPage() {
+  const events = [
+    {
+      date: "Sunday, June 14, 2026",
+      dateShort: "Jun 14",
+      title: "Summer Service Assembly",
+      time: "9:00 am",
+      venue: "Madison Senior Center",
+      address: "330 West Mifflin Street\nMadison, WI 53703",
+      cal: { year: 2026, month: 5, days: [14] },
+    },
+    {
+      date: "Sunday, September 13, 2026",
+      dateShort: "Sep 13",
+      title: "Pre-Conference Service Assembly",
+      time: "9:00 am",
+      venue: "Madison Senior Center",
+      address: "330 West Mifflin Street\nMadison, WI 53703",
+      cal: { year: 2026, month: 8, days: [13] },
+    },
+    {
+      date: "Friday, Nov 6 – Sunday, Nov 8, 2026",
+      dateShort: "Nov 6–8",
+      title: "Area 75 Conference",
+      time: "Fri 6:30 pm – Sun 12:00 pm",
+      venue: "The Ingleside Hotel",
+      address: "Pewaukee, WI",
+      cal: { year: 2026, month: 10, range: { start: 6, end: 8 } },
+    },
+  ];
+
+  return (
+    <>
+      <div className="events-page-header">
+        <h1>Events <span>&amp; Assemblies</span></h1>
+        <p>Upcoming Area 75 service assemblies, conferences, and AA events across Southern Wisconsin.</p>
+      </div>
+
+      <div className="events-content">
+        <div className="page-header" style={{marginTop:0}}>
+          <h1 style={{color:"var(--on-yellow)"}}>Upcoming Events</h1>
+          <div className="page-subtitle">All times Central. Assemblies held at Madison Senior Center unless noted.</div>
+        </div>
+
+        <div className="events-grid">
+          {events.map((e, i) => (
+            <div className="event-full-card" key={i}>
+              <div className="event-full-card-top">
+                <div className="date-label">{e.date}</div>
+              </div>
+              <div className="event-full-card-body">
+                <h3>{e.title}</h3>
+                <div className="location">
+                  <strong>{e.venue}</strong>
+                  {e.address.split("\n").map((l,j) => <span key={j}>{l}<br/></span>)}
+                  <span style={{color:"var(--accent)",fontWeight:"bold",fontSize:"0.8rem",marginTop:"0.3rem",display:"block"}}>🕐 {e.time}</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="page-header">
+          <h1 style={{color:"var(--on-yellow)"}}>Calendar View</h1>
+        </div>
+        <div className="calendars-row">
+          <MiniCal year={2026} month={5} highlightDays={[14]} />
+          <MiniCal year={2026} month={8} highlightDays={[13]} />
+          <MiniCal year={2026} month={10} rangeDays={[{start:6, end:8}]} />
+        </div>
+
+        <div className="prose">
+          <h2>Submit an Event</h2>
+          <p>
+            Only AA meetings and events may be listed on this calendar, in keeping with the Twelve Traditions
+            of Alcoholics Anonymous. To post your event:
+          </p>
+          <a className="resource-link" href="https://area75.org/page/post_your_event" target="_blank" rel="noreferrer">Submit an event to the Area 75 calendar ↗</a>
+
+          <h2>What Events Are Accepted?</h2>
+          <p><strong style={{color:"var(--on-yellow)"}}>Acceptable:</strong> Open AA meetings and AA social events (dances, camping weekends, potlucks) where an open meeting is the main purpose.</p>
+          <p><strong style={{color:"var(--accent-dark)"}}>Not accepted:</strong> AA social events without an open meeting, church events, treatment center events, or Alano club fundraisers.</p>
+
+          <h2>Area 75 Service Assemblies</h2>
+          <p>
+            Area 75 holds five service assemblies each year. All business is conducted using Robert's Rules
+            of Order. Assemblies are open to all GSRs, DCMs, and Area officers. Some assemblies also include
+            Zoom participation — see the <a href="https://docs.google.com/document/d/e/2PACX-1vQuTaHxcXiLJ8_vSzEdvo9Ovck8dWVcuJwaq-ciKlsCcqkn5oSgHYkfeyzz7-ZhBA/pub" target="_blank" rel="noreferrer">Zoom Guidelines</a> for details.
+          </p>
+          <ul>
+            <li><strong>Winter Service Assembly</strong> — Early in the year</li>
+            <li><strong>Spring Service Assembly</strong> — Spring</li>
+            <li><strong>Summer Service Assembly</strong> — June (see above)</li>
+            <li><strong>Pre-Conference Assembly</strong> — September (see above)</li>
+            <li><strong>Area 75 Conference</strong> — November (see above)</li>
+          </ul>
+          <p>All Winter, Summer, and Fall assemblies are held at the <strong>Madison Senior Center, 330 W. Mifflin St., Madison, WI 53703</strong>.</p>
+        </div>
+      </div>
+    </>
+  );
+}
+
+// ── PAGE ROUTER ──────────────────────────────────────────────────────────────
+
+function PageContent({ page, navigate, themeId, setThemeId }) {
+  switch(page) {
+    case "home":           return <HomePage navigate={navigate} themeId={themeId} setThemeId={setThemeId}/>;
+    case "meetings":       return <MeetingsPage/>;
+    case "events":         return <EventsPage/>;
+    case "whatisaa":       return <WhatIsAAPage/>;
+    case "preamble":       return <PreamblePage/>;
+    case "12steps":        return <TwelveStepsPage/>;
+    case "12traditions":   return <TwelveTraditionsPage/>;
+    case "aaresources":    return <AAResourcesPage/>;
+    case "messagetoteens": return <MessageToTeensPage/>;
+    case "structure":      return <StructurePage/>;
+    case "accessibilities":return <AccessibilitiesPage/>;
+    case "archives":       return <ArchivesPage/>;
+    case "corrections":    return <CorrectionsPage/>;
+    case "cpc":            return <CPCPage/>;
+    case "finance":        return <FinancePage/>;
+    case "grapevine":      return <GrapevinePage/>;
+    case "literature":     return <LiteraturePage/>;
+    case "publicinformation": return <PublicInfoPage/>;
+    case "treatment":      return <TreatmentPage/>;
+    case "technology":     return <TechnologyPage/>;
+    case "districtmeetings": return <DistrictMeetingsPage/>;
+    case "registrar":      return <RegistrarPage/>;
+    default:               return <HomePage navigate={navigate}/>;
+  }
+}
+
+// ── NAVBAR ───────────────────────────────────────────────────────────────────
+
+function Navbar({ page, setPage }) {
+  const [openDropdown, setOpenDropdown] = useState(null);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const navRef = useRef(null);
+
+  useEffect(() => {
+    function handleClick(e) {
+      if (navRef.current && !navRef.current.contains(e.target)) {
+        setOpenDropdown(null);
+        setMobileOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
+
+  function navigate(id) {
+    setPage(id);
+    setOpenDropdown(null);
+    setMobileOpen(false);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function toggleDropdown(name) {
+    setOpenDropdown(openDropdown === name ? null : name);
+  }
+
+  return (
+    <nav className="navbar" ref={navRef}>
+      <div className="navbar-inner">
+        <div className="navbar-brand" onClick={() => navigate("home")}>
+          <span className="brand-title">Area 75</span>
+          <span className="brand-sub">Alcoholics Anonymous · Southern Wisconsin</span>
+        </div>
+
+        <ul className="nav-links">
+          <li className="nav-item">
+            <button className={`nav-btn ${page==="home"?"active":""}`} onClick={() => navigate("home")}>Home</button>
+          </li>
+          <li className="nav-item">
+            <button className={`nav-btn ${page==="meetings"?"active":""}`} onClick={() => navigate("meetings")}>
+              Meetings
+            </button>
+          </li>
+          <li className="nav-item">
+            <button className={`nav-btn ${page==="events"?"active":""}`} onClick={() => navigate("events")}>
+              Events
+            </button>
+          </li>
+          <li className="nav-item">
+            <button
+              className={`nav-btn${openDropdown==="about"?" open":""}`}
+              onClick={() => toggleDropdown("about")}
+            >
+              About <span className="chevron">▼</span>
+            </button>
+            {openDropdown === "about" && (
+              <div className="dropdown">
+                {NAV_ABOUT.map(item => (
+                  <button key={item.id} className="dropdown-item" onClick={() => navigate(item.id)}>
+                    {item.label}
+                  </button>
+                ))}
+              </div>
+            )}
+          </li>
+          <li className="nav-item">
+            <button
+              className={`nav-btn${openDropdown==="business"?" open":""}`}
+              onClick={() => toggleDropdown("business")}
+            >
+              Area Business <span className="chevron">▼</span>
+            </button>
+            {openDropdown === "business" && (
+              <div className="dropdown" style={{right:0, left:"auto"}}>
+                <div className="dropdown-section-label">Administration</div>
+                {NAV_BUSINESS.map(item => (
+                  <button key={item.id} className="dropdown-item" onClick={() => navigate(item.id)}>
+                    {item.label}
+                  </button>
+                ))}
+                <hr className="dropdown-divider"/>
+                <div className="dropdown-section-label">Committees</div>
+                {NAV_COMMITTEES.map(item => (
+                  <button key={item.id} className="dropdown-item" onClick={() => navigate(item.id)}>
+                    {item.label}
+                  </button>
+                ))}
+              </div>
+            )}
+          </li>
+        </ul>
+
+        <button className="hamburger" onClick={() => setMobileOpen(!mobileOpen)} aria-label="Menu">
+          <span/><span/><span/>
+        </button>
+      </div>
+
+      {mobileOpen && (
+        <div className="mobile-nav">
+          <button className="mobile-nav-item" onClick={() => navigate("home")}>Home</button>
+          <button className="mobile-nav-item" onClick={() => navigate("meetings")}>Meetings</button>
+          <button className="mobile-nav-item" onClick={() => navigate("events")}>Events</button>
+
+          <div className="mobile-section-label">About</div>
+          {NAV_ABOUT.map(item => (
+            <button key={item.id} className="mobile-nav-item" onClick={() => navigate(item.id)}>{item.label}</button>
+          ))}
+
+          <div className="mobile-section-label">Area Business</div>
+          {NAV_BUSINESS.map(item => (
+            <button key={item.id} className="mobile-nav-item" onClick={() => navigate(item.id)}>{item.label}</button>
+          ))}
+
+          <div className="mobile-section-label">Committees</div>
+          {NAV_COMMITTEES.map(item => (
+            <button key={item.id} className="mobile-nav-item" onClick={() => navigate(item.id)}>{item.label}</button>
+          ))}
+        </div>
+      )}
+    </nav>
+  );
+}
+
+// ── FOOTER ───────────────────────────────────────────────────────────────────
+
+function Footer({ setPage }) {
+  function nav(id) {
+    setPage(id);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+  return (
+    <footer>
+      <div className="footer-inner">
+        <div className="footer-links">
+          <button onClick={() => nav("home")}>Home</button>
+          <button onClick={() => nav("whatisaa")}>What is AA?</button>
+          <button onClick={() => nav("preamble")}>The Preamble</button>
+          <button onClick={() => nav("12steps")}>12 Steps</button>
+          <button onClick={() => nav("12traditions")}>12 Traditions</button>
+          <button onClick={() => nav("aaresources")}>AA Resources</button>
+          <button onClick={() => nav("structure")}>Structure</button>
+          <button onClick={() => nav("technology")}>Technology</button>
+        </div>
+        <div style={{marginBottom:"0.5rem"}}>
+          <a href="https://www.aa.org" target="_blank" rel="noreferrer">AA.org</a>
+          &nbsp;·&nbsp;
+          <a href="http://mtg.area75.org/meetings.html" target="_blank" rel="noreferrer">Find a Meeting</a>
+          &nbsp;·&nbsp;
+          <a href="https://area75.org/calendar/" target="_blank" rel="noreferrer">Events Calendar</a>
+        </div>
+        <div>Copyright © Area 75 Southern Wisconsin Assembly · Alcoholics Anonymous in Southern Wisconsin</div>
+      </div>
+    </footer>
+  );
+}
+
+// ── APP ROOT ─────────────────────────────────────────────────────────────────
+
+function App() {
+  const [page, setPage] = useState("home");
+  const [themeId, setThemeId] = useState("original");
+
+  useEffect(() => {
+    const root = document.documentElement;
+    // Collect all possible variable names across all themes so we can cleanly reset
+    const allVars = new Set(
+      Object.values(THEMES).flatMap(t => Object.keys(t.vars))
+    );
+    // Clear every var first (restores :root defaults)
+    allVars.forEach(v => root.style.removeProperty(v));
+    // Apply the chosen theme's overrides
+    const theme = THEMES[themeId];
+    if (theme) {
+      Object.entries(theme.vars).forEach(([k, v]) => root.style.setProperty(k, v));
+    }
+  }, [themeId]);
+
+  return (
+    <div id="root">
+      <Navbar page={page} setPage={setPage}/>
+      <main className="main">
+        <PageContent page={page} navigate={setPage} themeId={themeId} setThemeId={setThemeId}/>
+      </main>
+      <Footer setPage={setPage}/>
+    </div>
+  );
+}
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(<App/>);
+</script>
+</body>
+</html>
