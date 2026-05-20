@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+{% block title %}Area Registrar | Area 75{% endblock %}
+{% block body %}
+<div class="page-title-bar">
+  <div class="container">
+    <div class="breadcrumb"><a href="{{ path('app_home') }}">Home</a> › <a href="#">Area Business</a> › <span>Registrar</span></div>
+    <h1>Area Registrar</h1>
+  </div>
+</div>
+<div class="page-content">
+  <div class="container" style="max-width:720px;">
+    <div class="card">
+      <p>Send your Group Information Change Forms &amp; New Group Forms to the Area Registrar at:</p>
+      <p style="font-size:1.15rem; font-weight:700; color:var(--terracotta-dark);">
+        <a href="mailto:Registrar@Area75.org">Registrar@Area75.org</a>
+      </p>
+    </div>
+
+    <h2 style="margin:2rem 0 1rem;">Forms</h2>
+    <ul class="pdf-link-list">
+      <li><a href="https://www.aa.org/sites/default/files/literature/F28_GroupInformationChangeForm_fillable_EN.pdf" target="_blank" rel="noopener">Group Information Change Form</a></li>
+      <li><a href="https://www.aa.org/sites/default/files/literature/F43_DCM_DCMC_Change_fillable_EN.pdf" target="_blank" rel="noopener">District Information Change Form</a></li>
+      <li><a href="https://www.aa.org/sites/default/files/literature/f-30_0322.pdf" target="_blank" rel="noopener">New Group Form</a></li>
+    </ul>
+  </div>
+</div>
+{% endblock %}

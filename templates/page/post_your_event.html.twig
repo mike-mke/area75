@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+{% block title %}Post Your Event | Area 75{% endblock %}
+{% block body %}
+<div class="page-title-bar">
+  <div class="container">
+    <div class="breadcrumb"><a href="{{ path('app_home') }}">Home</a> › <a href="{{ path('app_calendar') }}">Events</a> › <span>Post Your Event</span></div>
+    <h1>Post Your Event</h1>
+  </div>
+</div>
+<div class="page-content">
+  <div class="container" style="max-width:760px;">
+
+    <div class="card" style="margin-bottom:2rem;">
+      <h2 style="margin-bottom:1rem;">Posting your event is simple:</h2>
+      <ol style="font-size:1rem; line-height:2.4;">
+        <li>{% if not app.user %}<a href="{{ path('app_login') }}">Log in</a> or <a href="{{ path('app_register') }}">register</a>{% else %}You are logged in as <strong>{{ app.user.username }}</strong>{% endif %}</li>
+        <li><a href="{{ path('app_calendar_add') }}">Click here to add an event</a></li>
+        <li>Fill in the event details and click Save</li>
+      </ol>
+
+      <div style="margin-top:1.5rem;">
+        {% if app.user %}
+          <a href="{{ path('app_calendar_add') }}" class="btn btn-primary btn-lg">📅 Add an Event Now →</a>
+        {% else %}
+          <a href="{{ path('app_login') }}" class="btn btn-primary">Log In to Post</a>
+          <a href="{{ path('app_register') }}" class="btn btn-secondary" style="margin-left:.75rem;">Register</a>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="two-col" style="gap:1.5rem;">
+      <div>
+        <h3 style="color:var(--sage-dark); margin-bottom:.75rem;">✅ Acceptable Events</h3>
+        <ul>
+          <li>Open AA meetings (including AA social events like dances, camping weekends, potlucks) — as long as the open meeting is the main purpose</li>
+        </ul>
+      </div>
+      <div>
+        <h3 style="color:var(--terracotta-dark); margin-bottom:.75rem;">❌ Not Acceptable</h3>
+        <ul>
+          <li>An AA social event that does not include an open meeting</li>
+          <li>A church event that aims to help alcoholics</li>
+          <li>A treatment center presentation or event</li>
+          <li>A fund raiser for an Alano club</li>
+        </ul>
+      </div>
+    </div>
+
+    <p style="margin-top:1.5rem; font-size:.9rem; color:var(--text-muted);">
+      Based on the Twelve Traditions of Alcoholics Anonymous, only AA events and meetings will be accepted on this web site.
+    </p>
+
+  </div>
+</div>
+{% endblock %}

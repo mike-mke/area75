@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+{% block title %}The Preamble | Area 75{% endblock %}
+{% block body %}
+<div class="page-title-bar">
+  <div class="container">
+    <div class="breadcrumb"><a href="{{ path('app_home') }}">Home</a> › <a href="#">About</a> › <span>The Preamble</span></div>
+    <h1>The Preamble of Alcoholics Anonymous</h1>
+  </div>
+</div>
+<div class="page-content">
+  <div class="container" style="max-width:720px;">
+    <div class="card" style="border-left: 5px solid var(--terracotta); font-size:1.1rem; line-height:1.9; font-family:var(--font-serif);">
+      <p style="margin:0;">
+        Alcoholics Anonymous is a fellowship of people who share their experience, strength and hope with each other
+        that they may solve their common problem and help others to recover from alcoholism. The only requirement for
+        membership is the desire to stop drinking. There are no dues or fees for A.A. membership; we are self-supporting
+        through our own contributions. A.A. is not allied with any sect, denomination, politics, organization or
+        institution; does not wish to engage in any controversy; neither endorses nor opposes any causes. Our primary
+        purpose is to stay sober and help other alcoholics to achieve sobriety.
+      </p>
+    </div>
+    <p style="margin-top:1.5rem; font-size:.85rem; color:var(--text-muted);">
+      Reprinted from: <em>the A.A. Grapevine</em>, with the permission of the A.A. Grapevine.
+    </p>
+  </div>
+</div>
+{% endblock %}

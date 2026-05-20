@@ -1,0 +1,77 @@
+{% extends 'base.html.twig' %}
+{% block title %}Events Calendar | Area 75{% endblock %}
+
+{% block body %}
+<div class="page-title-bar">
+  <div class="container">
+    <div class="breadcrumb"><a href="{{ path('app_home') }}">Home</a> › <span>Events Calendar</span></div>
+    <h1>Events Calendar</h1>
+  </div>
+</div>
+
+<div class="page-content">
+  <div class="container">
+    <div class="two-col">
+      <!-- Calendar Main -->
+      <div>
+        <!-- Month nav -->
+        <div class="calendar-nav card" style="padding:1rem 1.5rem; margin-bottom:1.5rem;">
+          <a href="{{ path('app_calendar', {year: prevYear, month: prevMonth}) }}" class="btn btn-outline btn-sm">← Prev</a>
+          <h2 style="margin:0;">{{ (year ~ '-' ~ month ~ '-01')|date('F Y') }}</h2>
+          <a href="{{ path('app_calendar', {year: nextYear, month: nextMonth}) }}" class="btn btn-outline btn-sm">Next →</a>
+        </div>
+
+        {% if events is empty %}
+          <div class="panel" style="text-align:center; color:var(--text-muted);">
+            <p style="margin:0;">No events scheduled for {{ (year ~ '-' ~ month ~ '-01')|date('F Y') }}.</p>
+          </div>
+        {% else %}
+          {% for event in events %}
+            <div class="event-card">
+              <div class="event-date-badge">
+                <div class="day">{{ event.startDate|date('d') }}</div>
+                <div class="month">{{ event.startDate|date('M') }}</div>
+              </div>
+              <div class="event-info">
+                <h3><a href="{{ path('app_event_show', {id: event.id}) }}">{{ event.title }}</a></h3>
+                <div class="event-meta">
+                  <span>🕐 {{ event.startDate|date('l, g:i a') }}</span>
+                  {% if event.endDate %}<span>– {{ event.endDate|date('g:i a') }}</span>{% endif %}
+                  {% if event.location %}<span>📍 {{ event.location }}{% if event.city %}, {{ event.city }}{% endif %}</span>{% endif %}
+                  {% if event.zoomLink %}<span><a href="{{ event.zoomLink }}" target="_blank" rel="noopener">🔗 Zoom Link</a></span>{% endif %}
+                </div>
+                {% if event.description %}
+                  <p style="font-size:.875rem; color:var(--text-secondary); margin:.5rem 0 0;">{{ event.description|slice(0, 160) }}{% if event.description|length > 160 %}…{% endif %}</p>
+                {% endif %}
+              </div>
+            </div>
+          {% endfor %}
+        {% endif %}
+      </div>
+
+      <!-- Sidebar -->
+      <aside>
+        <div class="panel">
+          <h3>Add an Event</h3>
+          <p style="font-size:.875rem; color:var(--text-secondary);">Want to post your AA event to this calendar?</p>
+          <a href="{{ path('app_page', {slug: 'post_your_event'}) }}" class="btn btn-primary btn-sm" style="width:100%; text-align:center; justify-content:center;">Get Your Event Posted</a>
+        </div>
+
+        {% if upcoming is not empty %}
+          <div class="panel">
+            <h3>Upcoming Events</h3>
+            <ul style="list-style:none; padding:0;">
+              {% for event in upcoming %}
+                <li style="padding:.5rem 0; border-bottom:1px solid var(--tan); font-size:.875rem;">
+                  <strong>{{ event.startDate|date('M d') }}</strong> —
+                  <a href="{{ path('app_event_show', {id: event.id}) }}">{{ event.title|slice(0,40) }}{% if event.title|length > 40 %}…{% endif %}</a>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+      </aside>
+    </div>
+  </div>
+</div>
+{% endblock %}

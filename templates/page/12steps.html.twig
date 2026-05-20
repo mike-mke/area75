@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+{% block title %}The Twelve Steps | Area 75{% endblock %}
+{% block body %}
+<div class="page-title-bar">
+  <div class="container">
+    <div class="breadcrumb"><a href="{{ path('app_home') }}">Home</a> › <a href="#">About</a> › <span>The 12 Steps</span></div>
+    <h1>The Twelve Steps of Alcoholics Anonymous</h1>
+  </div>
+</div>
+<div class="page-content">
+  <div class="container" style="max-width:760px;">
+    <ol style="counter-reset:steps; list-style:none; padding:0;">
+      {% set steps = [
+        'We admitted we were powerless over alcohol — that our lives had become unmanageable.',
+        'Came to believe that a Power greater than ourselves could restore us to sanity.',
+        'Made a decision to turn our will and our lives over to the care of God as we understood Him.',
+        'Made a searching and fearless moral inventory of ourselves.',
+        'Admitted to God, to ourselves, and to another human being the exact nature of our wrongs.',
+        'Were entirely ready to have God remove all these defects of character.',
+        'Humbly asked Him to remove our shortcomings.',
+        'Made a list of all persons we had harmed, and became willing to make amends to them all.',
+        'Made direct amends to such people wherever possible, except when to do so would injure them or others.',
+        'Continued to take personal inventory and when we were wrong promptly admitted it.',
+        'Sought through prayer and meditation to improve our conscious contact with God as we understood Him, praying only for knowledge of His will for us and power to carry that out.',
+        'Having had a spiritual awakening as the result of these steps, we tried to carry this message to alcoholics, and to practice these principles in all our affairs.'
+      ] %}
+      {% for i, step in steps %}
+        <li style="display:flex; gap:1.25rem; align-items:flex-start; margin-bottom:1.25rem; padding:1.25rem 1.5rem; background:var(--white); border:1px solid var(--tan-border); border-radius:var(--radius); box-shadow:0 1px 4px var(--shadow);">
+          <span style="flex-shrink:0; width:2.2rem; height:2.2rem; background:var(--terracotta); color:var(--white); border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:.95rem;">{{ i + 1 }}</span>
+          <span style="font-family:var(--font-serif); font-size:1.05rem; line-height:1.75;">{{ step }}</span>
+        </li>
+      {% endfor %}
+    </ol>
+    <p style="font-size:.85rem; color:var(--text-muted); margin-top:1rem;">
+      Reprinted from: <em>A Brief Guide to Alcoholics Anonymous</em>, P-42, copyright 1972, Alcoholics Anonymous World Services, Inc., with permission of A.A. World Services, Inc.
+    </p>
+  </div>
+</div>
+{% endblock %}

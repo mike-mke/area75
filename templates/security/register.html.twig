@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+{% block title %}Register | Area 75{% endblock %}
+
+{% block body %}
+<div class="page-title-bar">
+  <div class="container">
+    <h1>Register for Area 75 Web Services</h1>
+    <p>Registration is required to submit events to the calendar. Your information is completely private.</p>
+  </div>
+</div>
+
+<div class="page-content">
+  <div class="container">
+    <div class="form-wrap symfony-form">
+      <p style="font-size:.9rem; color:var(--text-secondary); margin-bottom:1.5rem;">
+        You only need to register once. Any future events you'll simply log in and submit.
+      </p>
+
+      {{ form_start(form) }}
+
+        <div class="form-row">
+          {{ form_label(form.username) }}
+          {{ form_widget(form.username) }}
+          {{ form_errors(form.username) }}
+        </div>
+
+        <div class="form-row">
+          {{ form_label(form.email) }}
+          {{ form_widget(form.email) }}
+          {{ form_errors(form.email) }}
+        </div>
+
+        <div class="form-row">
+          {{ form_label(form.plainPassword.first) }}
+          {{ form_widget(form.plainPassword.first) }}
+          {{ form_errors(form.plainPassword.first) }}
+        </div>
+
+        <div class="form-row">
+          {{ form_label(form.plainPassword.second) }}
+          {{ form_widget(form.plainPassword.second) }}
+          {{ form_errors(form.plainPassword.second) }}
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg" style="width:100%; margin-top:.5rem;">Create Account</button>
+
+      {{ form_end(form) }}
+
+      <div style="text-align:center; margin-top:1.5rem; padding-top:1.25rem; border-top:1px solid var(--tan-border);">
+        <p style="font-size:.9rem; color:var(--text-secondary);">
+          Already have an account? <a href="{{ path('app_login') }}"><strong>Log in here</strong></a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+{% block title %}The Structure of AA | Area 75{% endblock %}
+{% block body %}
+<div class="page-title-bar">
+  <div class="container">
+    <div class="breadcrumb"><a href="{{ path('app_home') }}">Home</a> › <a href="#">About</a> › <span>Structure of AA</span></div>
+    <h1>The Structure of the Organization</h1>
+  </div>
+</div>
+<div class="page-content">
+  <div class="container" style="max-width:860px;">
+
+    <div class="content-section">
+      <h2>Introduction</h2>
+      <p>The Twelve Traditions of Alcoholics Anonymous make clear the principle that A.A., as such, should never be organized, that there are no bosses and no government in A.A. Yet at the same time, the Traditions recognize the need for some kind of organization to carry the message — such as publication of uniform literature, helping new groups get started, publishing an international magazine, and carrying the message into other countries.</p>
+      <p>The Conference structure of A.A. is the framework in which these "general services" are carried out. It is a method by which A.A.'s collective group conscience can speak and put its desires for worldwide services into effect.</p>
+    </div>
+
+    <div class="content-section">
+      <h2>How A.A. is Organized</h2>
+      <p>A.A. has been called an upside-down organization because by looking at an organizational chart the A.A. group or meeting is on top and "headquarters" is on the bottom. Each A.A. group may elect a <strong>general service representative (GSR)</strong> to represent the group at district and area business meetings. Groups form districts, usually on a geographic basis, and districts form areas.</p>
+      <p><strong>Area 75</strong> represents the A.A. groups meeting in the southern region of Wisconsin. Each area in the U.S. and Canada elects a delegate to attend an annual Conference where matters of importance are determined by the voting delegates.</p>
+    </div>
+
+    <div class="content-section">
+      <h2>How Area 75 — Southern Wisconsin is Organized</h2>
+      <p>Area 75, Southern Wisconsin, is comprised of thirty-one (31) geographic districts and one district (District 10) which represents Spanish speaking A.A. groups in the Area.</p>
+      <p>Area 75 elects officers from the membership in even numbered years, including a chairperson, alternate chairperson, delegate, alternate delegate, secretary, alternate secretary, treasurer, and alternate treasurer. The term of office is two years.</p>
+    </div>
+
+    <div class="content-section">
+      <h2>Area 75 Service Committees</h2>
+      <p>The Area 75 Service Committees include:</p>
+      <div class="card-grid">
+        {% set committees = [
+          {name: 'Archives', slug: 'archives', desc: 'Maintains a repository of historically important A.A. materials in Area 75.'},
+          {name: 'CPC', slug: 'cpc', desc: 'Brings the A.A. message to professional groups with contact with alcoholics.'},
+          {name: 'Corrections', slug: 'corrections', desc: 'Encourages members to carry the message to alcoholics behind the walls.'},
+          {name: 'Grapevine', slug: 'grapevine', desc: 'Supports activities related to the Grapevine Magazine distribution.'},
+          {name: 'Literature', slug: 'literature', desc: 'Maintains displays of A.A. Conference approved literature.'},
+          {name: 'Public Information', slug: 'publicinformation', desc: 'Creates greater understanding of the A.A. program through public media.'},
+          {name: 'Accessibilities', slug: 'accessibilities', desc: 'Helps members who need special assistance to participate in A.A.'},
+          {name: 'Technology', slug: 'technology', desc: 'Helps the Area with technology issues, including the website.'},
+          {name: 'Treatment', slug: 'treatment', desc: 'Carries the A.A. message into treatment facilities.'},
+        ] %}
+        {% for c in committees %}
+          <div class="card" style="padding:1.25rem;">
+            <h4><a href="{{ path('app_page', {slug: c.slug}) }}">{{ c.name }}</a></h4>
+            <p style="font-size:.875rem; color:var(--text-secondary); margin:0;">{{ c.desc }}</p>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="content-section">
+      <h2>Literature & Resources</h2>
+      <ul class="pdf-link-list">
+        <li><a href="https://www.aa.org/aa-service-manual" target="_blank" rel="noopener">The A.A. Service Manual Combined With Twelve Concepts for World Service, by Bill W.</a></li>
+        <li><a href="https://www.aa.org/inside-aa-understanding-fellowship-and-its-services" target="_blank" rel="noopener">Inside A.A. — understanding the service structure</a></li>
+        <li><a href="https://www.aa.org/circles-love-and-service" target="_blank" rel="noopener">Circles of Love and Service — full-color diagrams</a></li>
+        <li><a href="{{ path('app_business') }}">Area 75 Assembly Actions &amp; Handbook (see Business section)</a></li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

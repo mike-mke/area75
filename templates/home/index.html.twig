@@ -1,0 +1,136 @@
+{% extends 'base.html.twig' %}
+{% block title %}Area 75 | Alcoholics Anonymous in Southern Wisconsin{% endblock %}
+
+{% block body %}
+<!-- Hero -->
+<section class="hero">
+  <div class="container hero-content">
+    <h1>Area 75</h1>
+    <p>Alcoholics Anonymous in Southern Wisconsin</p>
+  </div>
+</section>
+
+<div class="page-content">
+  <div class="container">
+
+    <!-- Featured Assemblies -->
+    <div class="assembly-grid">
+      <div class="assembly-card">
+        <div class="date">Sun Jun 14th &bull; 9:00 am</div>
+        <h3>Summer Service Assembly</h3>
+        <address>
+          Madison Senior Center<br>
+          330 West Mifflin Street<br>
+          Madison, WI 53703
+        </address>
+      </div>
+      <div class="assembly-card">
+        <div class="date">Sun Sep 13th &bull; 9:00 am</div>
+        <h3>Pre-Conference Service Assembly</h3>
+        <address>
+          Madison Senior Center<br>
+          330 West Mifflin Street<br>
+          Madison, WI 53703
+        </address>
+      </div>
+      <div class="assembly-card">
+        <div class="date">Fri Nov 6th – Sun Nov 8th</div>
+        <h3>Area 75 Conference</h3>
+        <address>
+          The Ingleside Hotel<br>
+          Pewaukee, WI
+        </address>
+      </div>
+    </div>
+
+    <!-- Announcement -->
+    <div class="panel" style="background: var(--cream-dark); border-color: var(--terracotta); margin: 2rem 0; text-align:center;">
+      <p style="font-weight:700; font-size:1.05rem; margin-bottom:.5rem;">
+        📬 Area 75 Contribution Address Has Changed
+      </p>
+      <address style="font-style:normal;">
+        <strong>Area 75 Treasurer</strong><br>
+        6580 Monona Drive #1040<br>
+        Monona, WI 53716
+      </address>
+    </div>
+
+    <div class="two-col">
+      <!-- Upcoming Events -->
+      <div>
+        <div class="section-header" style="text-align:left; margin-bottom:1.5rem;">
+          <h2>Upcoming Events</h2>
+        </div>
+        {% if upcoming_events is empty %}
+          <div class="panel">
+            <p style="color:var(--text-muted); margin:0;">No upcoming events at this time.</p>
+          </div>
+        {% else %}
+          {% for event in upcoming_events %}
+            <div class="event-card">
+              <div class="event-date-badge">
+                <div class="day">{{ event.startDate|date('d') }}</div>
+                <div class="month">{{ event.startDate|date('M') }}</div>
+              </div>
+              <div class="event-info">
+                <h3><a href="{{ path('app_event_show', {id: event.id}) }}">{{ event.title }}</a></h3>
+                <div class="event-meta">
+                  <span>🕐 {{ event.startDate|date('g:i a') }}</span>
+                  {% if event.location %}<span>📍 {{ event.location }}{% if event.city %}, {{ event.city }}{% endif %}</span>{% endif %}
+                  {% if event.zoomLink %}<span><a href="{{ event.zoomLink }}" target="_blank" rel="noopener">🔗 Zoom</a></span>{% endif %}
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        {% endif %}
+        <p style="margin-top:1rem;">
+          <a href="{{ path('app_calendar') }}" class="btn btn-outline">View Full Calendar →</a>
+          &nbsp;
+          <a href="{{ path('app_page', {slug: 'post_your_event'}) }}" class="btn btn-secondary btn-sm">Get Your Event Posted</a>
+        </p>
+      </div>
+
+      <!-- Sidebar -->
+      <aside>
+        <div class="panel">
+          <h3>Quick Links</h3>
+          <ul>
+            <li><a href="http://mtg.area75.org/meetings.html" target="_blank">🔍 Find a Meeting</a></li>
+            <li><a href="{{ path('app_calendar') }}">📅 Events Calendar</a></li>
+            <li><a href="{{ path('app_business') }}">📋 Business Meetings</a></li>
+            <li><a href="{{ path('app_page', {slug: 'districtmeetings'}) }}">🗺️ District Meetings</a></li>
+            <li><a href="{{ path('app_page', {slug: 'aaresources'}) }}">☎️ AA Resources</a></li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h3>Zoom Guidelines</h3>
+          <p style="font-size:.875rem; color:var(--text-secondary);">Guidelines for Area Assemblies on Zoom are available.</p>
+          <a href="https://docs.google.com/document/d/e/2PACX-1vQuTaHxcXiLJ8_vSzEdvo9Ovck8dWVcuJwaq-ciKlsCcqkn5oSgHYkfeyzz7-ZhBA/pub"
+             target="_blank" rel="noopener" class="btn btn-outline btn-sm">View Guidelines →</a>
+        </div>
+      </aside>
+    </div>
+
+    <!-- Site Purpose -->
+    <hr style="border:none; border-top:2px solid var(--tan-border); margin:2.5rem 0;"/>
+    <div class="content-section" style="max-width:760px; margin:0 auto; text-align:center;">
+      <div class="section-header">
+        <h2>The Purpose of this Web Site</h2>
+      </div>
+      <p>
+        The purpose of this Web Site is to help the still suffering alcoholic by carrying the message of
+        recovery through Alcoholics Anonymous (A.A.) to the general public and to provide information
+        regarding events, meetings, workshops, conferences and other matters of importance to recovering
+        alcoholics in southern Wisconsin. It is our hope that through this Web Site alcoholics may be
+        assisted in developing face-to-face contact with one another.
+      </p>
+      <p>
+        The guiding principles of the content included in this site are taken from Alcoholics Anonymous
+        as defined in the Preamble of Alcoholics Anonymous, the Twelve Steps and Twelve Traditions, and
+        other A.A. General Service Conference approved literature.
+      </p>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

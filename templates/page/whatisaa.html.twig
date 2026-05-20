@@ -1,0 +1,71 @@
+{% extends 'base.html.twig' %}
+{% block title %}What is Alcoholics Anonymous? | Area 75{% endblock %}
+{% block body %}
+<div class="page-title-bar">
+  <div class="container">
+    <div class="breadcrumb"><a href="{{ path('app_home') }}">Home</a> › <a href="#">About</a> › <span>What is AA?</span></div>
+    <h1>What is Alcoholics Anonymous?</h1>
+  </div>
+</div>
+<div class="page-content">
+  <div class="container" style="max-width:820px;">
+
+    <div class="content-section">
+      <p>Alcoholics Anonymous is a voluntary, worldwide fellowship of men and women from all walks of life who meet together to attain and maintain sobriety. The only requirement for membership is a desire to stop drinking. There are no dues or fees for A.A. membership.</p>
+      <p style="font-size:.85rem; color:var(--text-muted);">Reprinted from: <em>A.A. at a Glance</em>, P-1, with permission of A.A. World Services Inc.</p>
+    </div>
+
+    <div class="content-section">
+      <h2>How Does A.A. Help the Alcoholic?</h2>
+      <p>Through the example and friendship of the recovered alcoholics in A.A., new members are encouraged to stay away from a drink "one day at a time," as everyone in A.A. does. Instead of "swearing off forever" or worrying about whether they will be sober tomorrow, people in A.A. concentrate on not drinking right now — today.</p>
+      <p>By keeping alcohol out of their systems, newcomers take care of one part of their illness — their bodies have a chance to get well. There is another part. If they are going to stay sober, they need healthy minds and healthy emotions, too. So they begin to straighten out their confused thinking and unhappy feelings by following A.A.'s "Twelve Steps" to recovery. These Steps suggest ideas and actions that can guide alcoholics toward happy and useful lives.</p>
+      <p>To be in touch with other members and to learn about recovery, new members go to A.A. meetings regularly.</p>
+    </div>
+
+    <div class="content-section">
+      <h2>What is an A.A. Meeting?</h2>
+      <p>There are generally two types of A.A. meetings — open meetings and closed meetings.</p>
+      <p>At <strong>open meetings</strong>, speakers tell how they drank, how they came to A.A., and how its program of recovery has helped them. Members may bring relatives or friends, and usually anyone interested in A.A. is also welcome to attend open meetings.</p>
+      <p><strong>Closed meetings</strong> are for alcoholics only. These are group discussions, and any members who want to may speak up, to ask questions and to share their thoughts with fellow members. At closed meetings, members can get help with personal problems in staying sober and in everyday living.</p>
+    </div>
+
+    <div class="content-section">
+      <h2>Why is A.A. "Anonymous"?</h2>
+      <p>Over the years, anonymity has proved one of the greatest gifts that A.A. offers the suffering alcoholic. Without it, many would never attend their first meeting. Although the stigma has lessened to some degree, most newcomers still find admission of their alcoholism so painful that it is possible only in a protected environment. Anonymity is essential for this atmosphere of trust and openness.</p>
+      <p>Anonymity serves two different yet equally vital functions. First, at the personal level, anonymity provides protection for all members from identification as alcoholics. Secondly, at the level of press, radio, TV, and films, anonymity stresses the equality in the Fellowship of all members by putting the brake on those who might otherwise exploit their A.A. affiliation to achieve recognition, power, or personal gain.</p>
+    </div>
+
+    <div class="content-section">
+      <h2>Who Runs A.A.?</h2>
+      <p>A.A. has no real government. Each group or meeting is free to work out its own customs and ways of holding meetings, as long as it does not hurt other groups or A.A. as a whole.</p>
+      <ol>
+        <li>Groups in the same area may set up a central office or "intergroup" office.</li>
+        <li>Groups everywhere share their experiences by writing to the A.A. General Service Office, in New York City.</li>
+        <li>Groups in the U.S. and Canada choose representatives to go to the A.A. General Service Conference, held once a year.</li>
+      </ol>
+    </div>
+
+    <div class="content-section">
+      <h2>What A.A. Does Not Do</h2>
+      <ol>
+        <li>A.A. does not run membership drives to try to argue alcoholics into joining.</li>
+        <li>A.A. does not check up on its members to see that they don't drink.</li>
+        <li>A.A. is not a religious organization.</li>
+        <li>A.A. is not a medical organization, does not give out medicines or psychiatric advice.</li>
+        <li>A.A. does not run hospitals, wards, or sanitariums.</li>
+        <li>A.A. is not connected with any other organization.</li>
+        <li>A.A. does not accept money from sources outside A.A.</li>
+      </ol>
+    </div>
+
+    <div class="content-section">
+      <h2>Where to Get More Information</h2>
+      <p>This Web Site includes telephone numbers for local A.A. central offices and intergroups in southern Wisconsin. See <a href="{{ path('app_page', {slug: 'aaresources'}) }}">AA Resources</a> for contact information.</p>
+      <p>You may also contact the A.A. General Service Office:<br>
+      <strong>Box 459, Grand Central Station, New York, NY 10163</strong><br>
+      (212) 870-3400 &nbsp;|&nbsp; <a href="https://www.aa.org" target="_blank" rel="noopener">www.aa.org</a></p>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

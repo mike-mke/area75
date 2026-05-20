@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="description" content="Area 75 — Alcoholics Anonymous in Southern Wisconsin"/>
+  <title>{% block title %}Area 75 | Alcoholics Anonymous in Southern Wisconsin{% endblock %}</title>
+  <link rel="stylesheet" href="{{ asset('css/app.css') }}"/>
+  {% block stylesheets %}{% endblock %}
+</head>
+<body>
+
+<!-- ── NAVBAR ─────────────────────────────────────────── -->
+<nav class="navbar" aria-label="Main navigation">
+  <div class="container navbar-inner">
+    <a href="{{ path('app_home') }}" class="navbar-brand">
+      <span class="brand-title">Area 75</span>
+      <span class="brand-sub">Alcoholics Anonymous · Southern Wisconsin</span>
+    </a>
+
+    <button class="hamburger" id="hamburger" aria-label="Toggle navigation" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+
+    <ul class="nav-links" id="nav-links" role="menubar">
+      <li role="none"><a role="menuitem" href="{{ path('app_home') }}">Home</a></li>
+      <li role="none"><a role="menuitem" href="http://mtg.area75.org/meetings.html" target="_blank" rel="noopener">Meetings ↗</a></li>
+      <li role="none"><a role="menuitem" href="{{ path('app_calendar') }}">Events</a></li>
+
+      <li class="dropdown" role="none">
+        <button role="menuitem" aria-haspopup="true" aria-expanded="false">About ▾</button>
+        <ul class="dropdown-menu" role="menu">
+          <li><a role="menuitem" href="{{ path('app_page', {slug: 'whatisaa'}) }}">What is AA?</a></li>
+          <li><a role="menuitem" href="{{ path('app_page', {slug: 'preamble'}) }}">The Preamble</a></li>
+          <li><a role="menuitem" href="{{ path('app_page', {slug: '12steps'}) }}">The 12 Steps</a></li>
+          <li><a role="menuitem" href="{{ path('app_page', {slug: '12traditions'}) }}">The 12 Traditions</a></li>
+          <li><a role="menuitem" href="{{ path('app_page', {slug: 'aaresources'}) }}">AA Resources</a></li>
+          <li><a role="menuitem" href="{{ path('app_page', {slug: 'messagetoteens'}) }}">Message to Teens</a></li>
+          <li><a role="menuitem" href="{{ path('app_page', {slug: 'structure'}) }}">The Structure of AA</a></li>
+        </ul>
+      </li>
+
+      <li class="dropdown" role="none">
+        <button role="menuitem" aria-haspopup="true" aria-expanded="false">Area Business ▾</button>
+        <ul class="dropdown-menu" role="menu">
+          <li><a role="menuitem" href="{{ path('app_business') }}">Business Meetings</a></li>
+          <li><a role="menuitem" href="{{ path('app_page', {slug: 'districtmeetings'}) }}">District Meetings</a></li>
+          <li><a role="menuitem" href="{{ path('app_page', {slug: 'registrar'}) }}">Registrar</a></li>
+          <li><span class="dropdown-label">Committees</span></li>
+          <li><a role="menuitem" href="{{ path('app_page', {slug: 'accessibilities'}) }}">Accessibilities</a></li>
+          <li><a role="menuitem" href="{{ path('app_page', {slug: 'archives'}) }}">Archives</a></li>
+          <li><a role="menuitem" href="{{ path('app_page', {slug: 'corrections'}) }}">Corrections</a></li>
+          <li><a role="menuitem" href="{{ path('app_page', {slug: 'cpc'}) }}">CPC</a></li>
+          <li><a role="menuitem" href="{{ path('app_page', {slug: 'finance'}) }}">Finance</a></li>
+          <li><a role="menuitem" href="{{ path('app_page', {slug: 'grapevine'}) }}">Grapevine</a></li>
+          <li><a role="menuitem" href="{{ path('app_page', {slug: 'literature'}) }}">Literature</a></li>
+          <li><a role="menuitem" href="{{ path('app_page', {slug: 'publicinformation'}) }}">Public Information</a></li>
+          <li><a role="menuitem" href="{{ path('app_page', {slug: 'treatment'}) }}">Treatment</a></li>
+          <li><a role="menuitem" href="{{ path('app_page', {slug: 'technology'}) }}">Technology</a></li>
+        </ul>
+      </li>
+
+      <!-- Auth links (mobile) -->
+      <li class="nav-auth" role="none">
+        {% if app.user %}
+          <span class="nav-user">{{ app.user.username }}</span>
+          <a href="{{ path('app_logout') }}" class="btn btn-ghost btn-sm">Log Out</a>
+        {% else %}
+          <a href="{{ path('app_login') }}" class="btn btn-ghost btn-sm">Log In</a>
+          <a href="{{ path('app_register') }}" class="btn btn-primary btn-sm">Register</a>
+        {% endif %}
+      </li>
+    </ul>
+
+    <!-- Auth links (desktop) -->
+    <div class="nav-auth" id="nav-auth-desktop" style="flex-shrink:0;">
+      {% if app.user %}
+        <span class="nav-user">{{ app.user.username }}</span>
+        <a href="{{ path('app_logout') }}" class="btn btn-ghost btn-sm">Log Out</a>
+      {% else %}
+        <a href="{{ path('app_login') }}" class="btn btn-ghost btn-sm">Log In</a>
+        <a href="{{ path('app_register') }}" class="btn btn-primary btn-sm">Register</a>
+      {% endif %}
+    </div>
+  </div>
+</nav>
+
+<!-- ── FLASH MESSAGES ─────────────────────────────────── -->
+{% for type, messages in app.flashes %}
+  {% for message in messages %}
+    <div class="container">
+      <div class="flash-messages">
+        <div class="alert alert-{{ type == 'error' ? 'danger' : type }}">
+          {{ message }}
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+{% endfor %}
+
+<!-- ── MAIN CONTENT ───────────────────────────────────── -->
+<main>
+  {% block body %}{% endblock %}
+</main>
+
+<!-- ── FOOTER ─────────────────────────────────────────── -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <div class="footer-brand">Area 75</div>
+        <p style="font-size:.85rem; color: var(--tan-border); margin:0;">Alcoholics Anonymous<br>in Southern Wisconsin</p>
+      </div>
+      <div class="footer-col">
+        <h4>About</h4>
+        <ul>
+          <li><a href="{{ path('app_page', {slug: 'whatisaa'}) }}">What is AA?</a></li>
+          <li><a href="{{ path('app_page', {slug: 'preamble'}) }}">The Preamble</a></li>
+          <li><a href="{{ path('app_page', {slug: '12steps'}) }}">The 12 Steps</a></li>
+          <li><a href="{{ path('app_page', {slug: '12traditions'}) }}">The 12 Traditions</a></li>
+          <li><a href="{{ path('app_page', {slug: 'structure'}) }}">Structure of AA</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Area Business</h4>
+        <ul>
+          <li><a href="{{ path('app_business') }}">Business Meetings</a></li>
+          <li><a href="{{ path('app_page', {slug: 'districtmeetings'}) }}">District Meetings</a></li>
+          <li><a href="{{ path('app_page', {slug: 'registrar'}) }}">Registrar</a></li>
+          <li><a href="{{ path('app_page', {slug: 'finance'}) }}">Finance</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="{{ path('app_page', {slug: 'aaresources'}) }}">AA Resources</a></li>
+          <li><a href="{{ path('app_calendar') }}">Events Calendar</a></li>
+          <li><a href="http://mtg.area75.org/meetings.html" target="_blank" rel="noopener">Find a Meeting</a></li>
+          <li><a href="https://www.aa.org" target="_blank" rel="noopener">AA.org</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>Copyright &copy; {{ "now"|date("Y") }} Area 75 Southern Wisconsin Assembly &nbsp;·&nbsp;
+      <a href="{{ path('app_page', {slug: 'technology'}) }}">Technology Committee</a> &nbsp;·&nbsp;
+      Treasurer address: 6580 Monona Drive #1040, Monona WI 53716</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Hamburger toggle
+const hamburger = document.getElementById('hamburger');
+const navLinks  = document.getElementById('nav-links');
+hamburger.addEventListener('click', () => {
+  const open = navLinks.classList.toggle('open');
+  hamburger.setAttribute('aria-expanded', open);
+});
+
+// Close nav on outside click
+document.addEventListener('click', (e) => {
+  if (!hamburger.contains(e.target) && !navLinks.contains(e.target)) {
+    navLinks.classList.remove('open');
+    hamburger.setAttribute('aria-expanded', false);
+  }
+});
+</script>
+
+{% block javascripts %}{% endblock %}
+</body>
+</html>

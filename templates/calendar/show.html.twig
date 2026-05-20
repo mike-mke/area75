@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ event.title }} | Area 75{% endblock %}
+
+{% block body %}
+<div class="page-title-bar">
+  <div class="container">
+    <div class="breadcrumb"><a href="{{ path('app_home') }}">Home</a> › <a href="{{ path('app_calendar') }}">Events</a> › <span>{{ event.title }}</span></div>
+    <h1>{{ event.title }}</h1>
+    <p>{{ event.startDate|date('l, F j, Y') }}</p>
+  </div>
+</div>
+
+<div class="page-content">
+  <div class="container" style="max-width:760px;">
+    <div class="card">
+      <div style="display:grid; grid-template-columns:auto 1fr; gap:1.5rem; align-items:start;">
+        <div class="event-date-badge" style="width:72px;">
+          <div class="day" style="font-size:2.2rem;">{{ event.startDate|date('d') }}</div>
+          <div class="month">{{ event.startDate|date('M Y') }}</div>
+        </div>
+        <div>
+          <p style="font-size:1.1rem; font-weight:700; margin-bottom:.5rem;">
+            🕐 {{ event.startDate|date('g:i a') }}
+            {% if event.endDate %} – {{ event.endDate|date('g:i a') }}{% endif %}
+          </p>
+          {% if event.location %}
+            <p><strong>📍 {{ event.location }}</strong></p>
+          {% endif %}
+          {% if event.fullAddress %}
+            <p style="color:var(--text-secondary); font-size:.9rem;">{{ event.fullAddress }}</p>
+          {% endif %}
+          {% if event.zoomLink %}
+            <p><a href="{{ event.zoomLink }}" target="_blank" rel="noopener" class="btn btn-secondary btn-sm">🔗 Join Zoom Meeting</a></p>
+          {% endif %}
+        </div>
+      </div>
+
+      {% if event.description %}
+        <hr style="margin:1.5rem 0; border:none; border-top:1px solid var(--tan-border);">
+        <div style="font-size:1rem; line-height:1.8;">{{ event.description|nl2br }}</div>
+      {% endif %}
+
+      {% if event.flyerPath %}
+        <hr style="margin:1.5rem 0; border:none; border-top:1px solid var(--tan-border);">
+        <p>
+          <a href="{{ asset('uploads/flyers/' ~ event.flyerPath) }}" target="_blank" class="btn btn-outline">
+            📄 View Event Flyer (PDF)
+          </a>
+        </p>
+      {% endif %}
+    </div>
+
+    <p style="margin-top:1.5rem;">
+      <a href="{{ path('app_calendar') }}" class="btn btn-ghost" style="color:var(--terracotta-dark); border-color:var(--terracotta);">← Back to Calendar</a>
+    </p>
+  </div>
+</div>
+{% endblock %}

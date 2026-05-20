@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+{% block title %}Log In | Area 75{% endblock %}
+
+{% block body %}
+<div class="page-title-bar">
+  <div class="container">
+    <h1>Log In</h1>
+    <p>Log in to post events to the calendar</p>
+  </div>
+</div>
+
+<div class="page-content">
+  <div class="container">
+    <div class="form-wrap">
+      {% if error %}
+        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+      {% endif %}
+
+      <form method="post" class="symfony-form">
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+        <div class="form-row">
+          <label for="username">Username</label>
+          <input type="text" id="username" name="_username" value="{{ last_username }}" autocomplete="username" autofocus placeholder="Your username">
+        </div>
+
+        <div class="form-row">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="_password" autocomplete="current-password" placeholder="Your password">
+        </div>
+
+        <div class="form-check" style="margin-bottom:1.25rem;">
+          <input type="checkbox" id="remember_me" name="_remember_me">
+          <label for="remember_me" style="font-weight:500;">Remember me</label>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg" style="width:100%;">Log In</button>
+      </form>
+
+      <div style="text-align:center; margin-top:1.5rem; padding-top:1.25rem; border-top:1px solid var(--tan-border);">
+        <p style="font-size:.9rem; color:var(--text-secondary);">
+          <a href="{{ path('app_reset_request') }}">Forgot your password?</a>
+        </p>
+        <p style="font-size:.9rem; color:var(--text-secondary); margin-top:.5rem;">
+          Don't have an account? <a href="{{ path('app_register') }}"><strong>Register here</strong></a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

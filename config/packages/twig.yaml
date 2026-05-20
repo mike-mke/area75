@@ -1,0 +1,9 @@
+twig:
+    default_path: '%kernel.project_dir%/templates'
+    globals:
+        app_name: 'Area 75'
+        app_tagline: 'Alcoholics Anonymous in Southern Wisconsin'
+
+when@test:
+    twig:
+        strict_variables: true

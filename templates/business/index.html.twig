@@ -1,0 +1,87 @@
+{% extends 'base.html.twig' %}
+{% block title %}Business Meetings | Area 75{% endblock %}
+
+{% block body %}
+<div class="page-title-bar">
+  <div class="container">
+    <div class="breadcrumb"><a href="{{ path('app_home') }}">Home</a> › <span>Area Business</span></div>
+    <h1>Business Meetings</h1>
+  </div>
+</div>
+
+<div class="page-content">
+  <div class="container">
+    <div class="two-col">
+      <div>
+        <div class="content-section">
+          <p>Winter, Summer and Fall Service Assemblies and the Pre-Conference Assembly are held at:</p>
+          <div class="card" style="display:inline-block; margin-bottom:1.5rem;">
+            <address style="font-style:normal; line-height:2; font-size:1.05rem;">
+              <strong>Madison Senior Center</strong><br>
+              330 W. Mifflin St.<br>
+              Madison, WI 53703
+            </address>
+          </div>
+        </div>
+
+        <div class="content-section">
+          <h2>Forms & Documents</h2>
+          <ul class="pdf-link-list">
+            <li><a href="/pdfs/viewer/contributions" target="_blank">Area Contribution Form (viewer)</a> | <a href="/pdfs/contributions">Download</a></li>
+            <li><a href="/pdfs/viewer/areaproposalform" target="_blank">Area Proposal Form PDF (viewer)</a> | <a href="/pdfs/areaproposalform">Download</a></li>
+            <li><a href="/pdfs/viewer/areaproposalformfillable" target="_blank">Area Proposal Form — Fillable PDF</a></li>
+            <li><a href="/pdfs/viewer/areaproposalflowchart" target="_blank">Area Proposal Flowchart</a></li>
+            <li><a href="/pdfs/viewer/area75assemblyactions" target="_blank">Area 75 Assembly Actions</a></li>
+            <li><a href="/pdfs/viewer/area75handbook" target="_blank">Area 75 Handbook</a></li>
+            <li><a href="/pdfs/viewer/standingcommitteechairpersonresume" target="_blank">Standing Committee Chairperson Resume</a></li>
+            <li><a href="/pdfs/viewer/conferencebidform" target="_blank">Conference Bid Form</a></li>
+            <li><a href="/pdfs/viewer/conferenceguidelines" target="_blank">Conference Guidelines</a></li>
+            <li><a href="/pdfs/viewer/conferenceadvisorycommittee" target="_blank">Conference Advisory Committee</a></li>
+            <li><a href="/pdfs/viewer/districtcommitteeinformationform" target="_blank">District Committee Information Form</a></li>
+            <li><a href="/pdfs/viewer/expensereimbursementaction" target="_blank">Financial Support of Area Officers and Chairs</a></li>
+            <li><a href="/pdfs/viewer/aa_history_wisconsin" target="_blank">Alcoholics Anonymous History in Wisconsin</a></li>
+            <li><a href="/pdfs/viewer/prerelease_request" target="_blank">PreRelease Request — For Inmates</a></li>
+            <li><a href="/pdfs/viewer/prerelease_request_es" target="_blank">PreRelease Request — For Inmates (Spanish)</a></li>
+            <li><a href="/pdfs/viewer/F-162-spanish-outsider" target="_blank">Pre-release Form — Outside Volunteers (Spanish)</a></li>
+            <li><a href="/pdfs/viewer/F-162-outsider" target="_blank">Pre-release Form — Outside Volunteers</a></li>
+            <li><a href="/pdfs/viewer/self_assessment_guide" target="_blank">AA Accessibility Self Assessment Guide</a></li>
+            <li><a href="/pdfs/viewer/area-inventory-questions" target="_blank">Area Inventory Questions</a></li>
+            <li><a href="/pdfs/viewer/how_area_75_operates" target="_blank">How Area 75 Operates</a></li>
+            <li><a href="https://docs.google.com/forms/d/1qSkySEcQ9qTf_8NBj6eGzrDaKvQluRlLBAcys0dpYV8/viewform?edit_requested=true" target="_blank" rel="noopener">Expense Report Form</a></li>
+            <li><a href="https://docs.google.com/spreadsheets/d/1Y8HnJSK6VBkqAbGvaQ5CM8L9Gs0DVW8rs9kGd5O3CDk/edit?usp=sharing" target="_blank" rel="noopener">Conference Budget Worksheet</a></li>
+            <li><a href="https://www.aa.org/sites/default/files/literature/en_newgroup.pdf" target="_blank" rel="noopener">New Group Form</a></li>
+            <li><a href="https://www.aa.org/sites/default/files/literature/F28_GroupInformationChangeForm_fillable_EN.pdf" target="_blank" rel="noopener">Group Information Change Form</a></li>
+            <li><a href="https://www.aa.org/sites/default/files/literature/F43_DCM_DCMC_Change_fillable_EN.pdf" target="_blank" rel="noopener">District Information Change Form</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <aside>
+        <div class="panel">
+          <h3>Area Business Navigation</h3>
+          <ul>
+            <li><a href="{{ path('app_business') }}">Business Meetings</a></li>
+            <li><a href="{{ path('app_page', {slug: 'districtmeetings'}) }}">District Meetings</a></li>
+            <li><a href="{{ path('app_page', {slug: 'registrar'}) }}">Registrar</a></li>
+            <li><a href="{{ path('app_page', {slug: 'finance'}) }}">Finance</a></li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h3>Committees</h3>
+          <ul>
+            <li><a href="{{ path('app_page', {slug: 'accessibilities'}) }}">Accessibilities</a></li>
+            <li><a href="{{ path('app_page', {slug: 'archives'}) }}">Archives</a></li>
+            <li><a href="{{ path('app_page', {slug: 'corrections'}) }}">Corrections</a></li>
+            <li><a href="{{ path('app_page', {slug: 'cpc'}) }}">CPC</a></li>
+            <li><a href="{{ path('app_page', {slug: 'grapevine'}) }}">Grapevine</a></li>
+            <li><a href="{{ path('app_page', {slug: 'literature'}) }}">Literature</a></li>
+            <li><a href="{{ path('app_page', {slug: 'publicinformation'}) }}">Public Information</a></li>
+            <li><a href="{{ path('app_page', {slug: 'treatment'}) }}">Treatment</a></li>
+            <li><a href="{{ path('app_page', {slug: 'technology'}) }}">Technology</a></li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+{% endblock %}
