@@ -155,3 +155,6 @@ vite.config.ts.timestamp-*
 # Flyer uploads (keep directory, not files)
 /public/uploads/flyers/*
 !/public/uploads/flyers/.gitkeep
+
+# IntelliJ settings directory
+.idea/
