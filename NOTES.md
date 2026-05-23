@@ -36,3 +36,20 @@ The app faithfully mirrors all functionality from area75.org with a warm, earthy
 * The original index.html is preserved as index_original.html
 
 See SETUP.md for the full setup guide including how to promote a user to admin.
+
+## Notes
+* After running all the preliminary setup steps, you actually want to navigate to this URL: http://localhost:8001
+
+## To Do
+* Allow an admin to accept/reject an Event
+* Al to put in the current schema actually used and have Claude use it (or send the schema to Mike)
+
+## Additional Features
+#### Group Management
+* Allow ordinary users to add/edit a Group (once accepted, they lose the right to edit it)
+* Allow admin users to accept/reject Groups
+* Allow admin users to add/edit Groups
+* Allow admin users to retire/delete Groups (Should all users see 'retired' Groups or just admins?)
+
+#### Assembly Cards Management
+* Allow admin users to add/edit/delete the upcoming Assembly Cards (site should show the next three)
