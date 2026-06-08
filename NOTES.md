@@ -53,3 +53,4 @@ See SETUP.md for the full setup guide including how to promote a user to admin.
 
 #### Assembly Cards Management
 * Allow admin users to add/edit/delete the upcoming Assembly Cards (site should show the next three)
+
