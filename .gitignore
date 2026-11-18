@@ -158,3 +158,6 @@ vite.config.ts.timestamp-*
 
 # IntelliJ settings directory
 .idea/
+
+# macOS Finder metadata
+.DS_Store
